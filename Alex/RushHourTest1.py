@@ -1,5 +1,11 @@
 
 from Car import Car
+#from "..\Pim" import rushhour_visualize #" import RushhourVisualisation
+#from "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim\rushhour_visualize" import RushhourVisualisation  #RushHourGit.Pim.rushhour_visualize import RushhourVisualisation
+import sys
+sys.path.insert(0, "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim")
+from rushhour_visualize import runSimulation #import RushhourVisualisation
+
 
 WIDTH = 5
 HEIGHT = 5
@@ -13,7 +19,7 @@ EXIT_LEFT_INT = 103
 EXIT_RIGHT = "| _ "
 EXIT_RIGHT_INT = 104
 RED_CAR = "| R "
-RED_CAR_INT = 105
+RED_CAR_INT = 0
 FIELD = []
 
 
@@ -32,6 +38,20 @@ def run():
 	placeCar(Bus)
 
 	printField()
+	# van Pim:
+	# runSimulation wil een list van die dingen hieronder
+	car1 = [1, 4, 'v', 2, 'green']
+	car2 = [2, 5, 'h', 3, 'yellow']
+	car3 = [5, 4, 'v', 2, 'light sky blue']
+	car4 = [0, 3, 'h', 2, 'red']
+	car5 = [3, 3, 'v', 2, 'orange']
+	car6 = [4, 2, 'v', 3, 'violet']
+	car7 = [2, 0, 'v', 2, 'pink']
+	car8 = [3, 0, 'h', 2, 'cyan']
+	car9 = [5, 0, 'v', 2, 'magenta']
+	car10 = [1, 2, 'h', 3, 'blue']
+	carList = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10]
+	runSimulation(carList, 6, 6)
 
 def moveCar():
 	"""
@@ -88,3 +108,5 @@ def giveErrorMessage(ErrorMessage):
 
 if __name__ == '__main__':
 	run()
+	for Row in FIELD:
+		print Row
