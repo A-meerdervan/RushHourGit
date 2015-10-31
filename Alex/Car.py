@@ -6,6 +6,7 @@ class Car:
     """
 
     def createCoordinateList(self):
+        self.Coordinates = []
         self.Coordinates.append(self.MainCoordinate)
         if self.Direction == "Vertical":
             for i in range(1, self.Length):
@@ -25,6 +26,10 @@ class Car:
         self.Length = Length
         self.Coordinates = []
         
+        self.createCoordinateList()
+
+    def setMainCoordinate(self, NewMainCoordinate):
+        self.MainCoordinate = NewMainCoordinate
         self.createCoordinateList()
 
 
