@@ -1,4 +1,7 @@
 
+# This is used to emulate pass by value in the canMakeMove() function
+from copy import deepcopy
+
 from Car import Car
 #from "..\Pim" import rushhour_visualize #" import RushhourVisualisation
 #from "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim\rushhour_visualize" import RushhourVisualisation  #RushHourGit.Pim.rushhour_visualize import RushhourVisualisation
@@ -7,8 +10,8 @@ sys.path.insert(0, "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHou
 from rushhour_visualize import runSimulation #import RushhourVisualisation
 
 
-WIDTH = 5
-HEIGHT = 5
+WIDTH = 6
+HEIGHT = 6
 EMPTY_SPOT = "| _ "
 EMPTY_SPOT_INT = 101
 EMPTY_SPOT_RIGHT = "| _ |"
@@ -28,52 +31,28 @@ def run():
 	CarsList = []
 
 	# insert Exit
-	placeExit("Left", 2)
+	placeExit("Left", 3)
 
-	# insert Red Car
-	RedCar = Car([0,2], "Horizontal" , 2, RED_CAR_INT)
+	# insert cars
+	RedCar = Car([4,3], "Horizontal" , 2, RED_CAR_INT)
+	Car1 = Car([0,2], "Horizontal", 3, 1)
+	Car2 = Car([3,1], "Vertical", 3, 2)
+
 	CarsList.append(RedCar)
-	placeCar(RedCar)
-	print canMoveCar(RedCar, 2)
-	print RedCar.Coordinates
-	moveCar(CarsList, RedCar.Number, 2)
+	CarsList.append(Car1)
+	CarsList.append(Car2)
 
-	# insert other car
-	OtherCar = Car([0,1], "Horizontal", 3, 1)
-	CarsList.append(OtherCar)
-	placeCar(OtherCar)
+	for car in CarsList:
+		placeCar(car)
 
-	Bus = Car([3,0], "Vertical", 3, 2)
-	placeCar(Bus)
-	CarsList.append(Bus)
-
-	moveCar(CarsList, Bus.Number, 2)
 	printFieldFlipped()
-	print
-	moveCar(CarsList, Bus.Number, -2)
+	moveCar(CarsList, Car2.Number, -1)
+	printFieldFlipped()
+	moveCar(CarsList, RedCar.Number, -4)
 	printFieldFlipped()
 
-	#print canMoveCar(Bus, 1)
-	#placeCar(Bus)
-
-	# van Pim:
-	# runSimulation wil een list van die dingen hieronder
-	"""
-	car1 = [1, 4, 'v', 2, 'green']
-	car2 = [2, 5, 'h', 3, 'yellow']
-	car3 = [5, 4, 'v', 2, 'light sky blue']
-	car4 = [0, 3, 'h', 2, 'red']
-	car5 = [3, 3, 'v', 2, 'orange']
-	car6 = [4, 2, 'v', 3, 'violet']
-	car7 = [2, 0, 'v', 2, 'pink']
-	car8 = [3, 0, 'h', 2, 'cyan']
-	car9 = [5, 0, 'v', 2, 'magenta']
-	car10 = [1, 2, 'h', 3, 'blue']
-	carList = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10]
-	runSimulation(carList, 6, 6)
-	"""
 	# in python one has no pointers, but wrapping something in list allows the 
-	#function to change it outside the scope of the function. 
+	# function to change it outside the scope of the function. 
 def moveCar(CarsList, Number, Steps):
 	# First clear the car in the field
 	for Coordinate in CarsList[Number].Coordinates:
@@ -84,22 +63,43 @@ def moveCar(CarsList, Number, Steps):
 	# Car is Vertical
 	else:
 		CarsList[Number].setMainCoordinate([CarsList[Number].MainCoordinate[0], CarsList[Number].MainCoordinate[1] + Steps])
-	print CarsList[Number].Coordinates
 	placeCar(CarsList[Number])
 
 
 # Steps can be positive or negative, positive x is to the right, positive y is up
 def canMoveCar(carCopy, Steps):
-	car = carCopy
+	# Do a deep copy to emulate pass by value, since when the car cannot move, the 
+	# Coordinates should not change
+	car = deepcopy(carCopy)
 	if car.Direction == "Horizontal":
-		car.setMainCoordinate([car.MainCoordinate[0] + Steps, car.MainCoordinate[1] ])
-	# Car is Vertical
+		# Check if the car will be within the Field bounds, if not return False
+		if car.MainCoordinate[0] + Steps < 0:
+			print "(horiz) eerste false door car met number: " + str(car.Number)
+			return False
+		elif car.MainCoordinate[0] + car.Length -1 + Steps >= WIDTH:
+			print "(horiz) tweede false door car met number: " + str(car.Number)
+			return False
+		# Move the copy of the car
+		car.setMainCoordinate([car.MainCoordinate[0] + Steps, car.MainCoordinate[1] ])	
+		print "move hori car: " + str(car.Number)
+	# Car is Vertical:
 	else:
+		# Check if the car will be within the Field bounds, if not return False
+		if car.MainCoordinate[1] + Steps < 0:
+			print "(verti) eerste false door car met number: " + str(Car.Number)
+			return False
+		elif car.MainCoordinate[1] + car.Length -1 + Steps >= HEIGHT:
+			print "(verti) tweede false door car met number: " + str(Car.Number)
+			return False
+		# Move the copy of the car
 		car.setMainCoordinate([car.MainCoordinate[0], car.MainCoordinate[1] + Steps])
+		print "move verti car: " + str(car.Number)
 	# Loop the coordinates, when a space is not empty or the car itself, return false
 	CanMoveCar = True
 	for Coordinate in car.Coordinates:
-		if FIELD[Coordinate[1]][Coordinate[0]] < 100 and not car.Number:
+		if FIELD[Coordinate[1]][Coordinate[0]] < 100 and FIELD[Coordinate[1]][Coordinate[0]] != car.Number:
+			print FIELD[Coordinate[1]][Coordinate[0]]
+			print Coordinate
 			CanMoveCar = False
 			break
 	return CanMoveCar
@@ -168,6 +168,7 @@ def printFieldFlipped():
 				ItemString = "| " + str(Item) + " "
 			RowString += ItemString
 		print RowString
+	print
 
 
 def giveErrorMessage(ErrorMessage):
