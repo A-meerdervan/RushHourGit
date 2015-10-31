@@ -12,7 +12,7 @@ class RushhourVisualisation:
     # We moeten het aantal autos weten met de richting en de posities. De originele positie van de
     # auto is altijd het meest richting de basis (dat wil zeggen, rechts boven). De richting is
     # y/v of x/h voor respectievelijk verticaal of horizontaal.
-    def __init__(self, width, height, cars, delay = 0.2):
+    def __init__(self, width, height, cars, delay = 1):
         "Initializes a visualization with the specified parameters."
         # Number of seconds to pause after each frame
         self.delay = delay
@@ -71,16 +71,17 @@ class RushhourVisualisation:
         x2, y2 = self._map_coords(x + tmpDirection[0], y + tmpDirection[1])
         return self.w.create_rectangle([x1, y1, x2, y2], fill= color)
 
-    def update(self):
+    def update(self, state):
         "Redraws the visualization with the specified room and robot state."
         if self.carsImage:
             for cars in self.carsImage:
-                self.w.delete(car)
+                self.w.delete(cars)
                 self.master.update_idletasks()
         # Draw new cars
         self.carsImage = []
-        for cars in self.carsData:
-            self.carsImage.append(self._draw_car(cars[0], cars[1], cars[2], cars[3], cars[4]))
+        for cars in range(0,len(state)):
+            self.carsImage.append(self._draw_car(state[cars]%6, state[cars]/6,
+            self.carsData[cars][2], self.carsData[cars][3], self.carsData[cars][4]))
 
         # Update text
         self.w.delete(self.text)
@@ -95,26 +96,16 @@ class RushhourVisualisation:
         "Indicate that the animation is done so that we allow the user to close the window."
         mainloop()
 
-class Room(object):
-    def __init__(self, width, height):
-		self.width = int(max([1, width]))
-		self.height = int(max([1, height]))
-
-    def isPositionInRoom(self, x, y):
-		if 0.0 <= x < self.width and 0.0 <= y < self.height:
-			return True
-		return False
-
-def runSimulation(carList, width, height):
-    room = Room(width, height)
-    cars = carList
-    anim = RushhourVisualisation(room.width, room.height, cars)
-    anim.update()
+def runSimulation(carList, stateList, width, height, delay):
+    anim = RushhourVisualisation(width, height, carList, delay)
+    for states in stateList:
+        anim.update(states)
     anim.done()
 
     return
 
 if __name__ == '__main__':
+    # ([25, 32, 29, 19, 21, 16, 2, 3, 5, 13])
     car1 = [1, 4, 'v', 2, 'green']
     car2 = [2, 5, 'h', 3, 'yellow']
     car3 = [5, 4, 'v', 2, 'light sky blue']
@@ -125,5 +116,34 @@ if __name__ == '__main__':
     car8 = [3, 0, 'h', 2, 'cyan']
     car9 = [5, 0, 'v', 2, 'magenta']
     car10 = [1, 2, 'h', 3, 'blue']
-    carList = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10]
-    runSimulation(carList, 6, 6)
+    carList1 = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10]
+
+    # http://www.thinkfun.com/mathcounts/play-rush-hour, level 1 =D
+    cara = [2, 3, 'h', 2, 'red']
+    carb = [4, 3, 'v', 3, 'yellow']
+    carc = [3, 1, 'v', 2, 'green']
+    card = [4, 1, 'h', 2, 'orange']
+    carList2 = [cara, carb, carc, card]
+
+    stateList = []
+    startState = []
+    for cars in carList2:
+        startState.append(cars[0]+cars[1]*6)
+
+    stateList.append(startState)
+    stateList.append([19,22,9,10])
+    stateList.append([19,22,15,10])
+    stateList.append([19,22,21,10])
+    stateList.append([19,22,27,10])
+    stateList.append([19,22,27,9])
+    stateList.append([19,22,27,8])
+    stateList.append([19,16,27,8])
+    stateList.append([19,10,27,8])
+    stateList.append([19,4,27,8])
+    stateList.append([20,4,27,8])
+    stateList.append([21,4,27,8])
+    stateList.append([22,4,27,8])
+
+    print stateList
+
+    runSimulation(carList2, stateList, 6, 6, 0.5)
