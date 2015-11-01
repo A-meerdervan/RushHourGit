@@ -1,0 +1,6 @@
+
+- 	We moeten iets hebben zodat als je een auto 1 stap naar voren beweegt 
+dat ie dan niet ook gaat proberen hem diezelfde stap weer terug te zetten als 1 van de opties
+Dat gebeurd sws niet doordat we elke optie vergelijken met de geschiedenis, maar 
+we kunnen het miss zo fixen dat ie m niet toevoegd als optie en dus niet elke keer zonder nut de geschiedenis moet comparen. 
+
