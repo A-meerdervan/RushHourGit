@@ -6,8 +6,8 @@ from Car import Car
 #from "..\Pim" import rushhour_visualize #" import RushhourVisualisation
 #from "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim\rushhour_visualize" import RushhourVisualisation  #RushHourGit.Pim.rushhour_visualize import RushhourVisualisation
 import sys
-sys.path.insert(0, "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim")
-from rushhour_visualize import runSimulation #import RushhourVisualisation
+#sys.path.insert(0, "C:\Users\daan\Desktop\Nieuwe map\RushHourGit\Pim")
+#from rushhour_visualize import runSimulation #import RushhourVisualisation
 
 
 WIDTH = 6
@@ -63,7 +63,7 @@ def run():
 		print "Per auto: BlokkadeList: "
 		print BlokkadeList1
 		if len(BlokkadeList1) == 0:
-			if canMoveCar(CarNumber, -1): 
+			if canMoveCar(CarNumber, -1):
 				moveCar(CarNumber, -1)
 	# Test voor horizontale auto die een list wil krijgen
 	# Car 1 moet aan de kant voor Car5, die heeft conflict x = 1
@@ -80,7 +80,7 @@ def getBlokkadeList(Number, ConflictNumber):
 	BlokkadeList = []
 	CoordinatesToFree = getCoordinatesToFree(Number, ConflictNumber)
 	for Coordinate in CoordinatesToFree:
-		Item = FIELD[Coordinate[1] ][ Coordinate[0] ] 
+		Item = FIELD[Coordinate[1] ][ Coordinate[0] ]
 		# only add if it is a different car
 		if Item < 100 and Item != Number:
 			# Prevent duplicates when adding
@@ -89,7 +89,7 @@ def getBlokkadeList(Number, ConflictNumber):
 	return BlokkadeList
 
 	# This function returns a list of coordinates that have to be free
-	# to allow the car to move away from a line of conflict. 
+	# to allow the car to move away from a line of conflict.
 def getCoordinatesToFree(Number, ConflictNumber):
 	CoordinatesToFree = []
 	car = CARSLIST[Number]
@@ -105,7 +105,7 @@ def getCoordinatesToFree(Number, ConflictNumber):
 			x = car.MainCoordinate[0]
 			# Check if moving the car up would place it outside the field
 			if (ConflictNumber + car.Length) < HEIGHT:
-				# add the coordinates of where the car could move to 
+				# add the coordinates of where the car could move to
 				for i in range(1, car.Length + 1):
 					y = ConflictNumber + i
 					CoordinatesToFree.append([x,y])
@@ -118,7 +118,7 @@ def getCoordinatesToFree(Number, ConflictNumber):
 			y = car.MainCoordinate[1]
 			# Check if moving the car to the right would place it outside the field
 			if (ConflictNumber + car.Length) < WIDTH:
-				# add the coordinates of where the car could move to 
+				# add the coordinates of where the car could move to
 				for i in range(1, car.Length + 1):
 					x = ConflictNumber + i
 					CoordinatesToFree.append([x,y])
@@ -133,7 +133,7 @@ def getCoordinatesToFree(Number, ConflictNumber):
 def moveCar(Number, Steps):
 	# First clear the car in the field
 	for Coordinate in CARSLIST[Number].Coordinates:
-		FIELD[Coordinate[1] ][ Coordinate[0] ] = EMPTY_SPOT_INT 
+		FIELD[Coordinate[1] ][ Coordinate[0] ] = EMPTY_SPOT_INT
 	# Now Set the new Coordinates and place the car
 	if CARSLIST[Number].Direction == "Horizontal":
 		CARSLIST[Number].setMainCoordinate([CARSLIST[Number].MainCoordinate[0] + Steps, CARSLIST[Number].MainCoordinate[1] ])
@@ -147,7 +147,7 @@ def moveCar(Number, Steps):
 
 # Steps can be positive or negative, positive x is to the right, positive y is up
 def canMoveCar(carNumber, Steps):
-	# Do a deep copy to emulate pass by value, since when the car cannot move, the 
+	# Do a deep copy to emulate pass by value, since when the car cannot move, the
 	# Coordinates should not change
 	car = deepcopy(CARSLIST[carNumber])
 	if car.Direction == "Horizontal":
@@ -157,7 +157,7 @@ def canMoveCar(carNumber, Steps):
 		elif car.MainCoordinate[0] + car.Length -1 + Steps >= WIDTH:
 			return False
 		# Move the copy of the car
-		car.setMainCoordinate([car.MainCoordinate[0] + Steps, car.MainCoordinate[1] ])	
+		car.setMainCoordinate([car.MainCoordinate[0] + Steps, car.MainCoordinate[1] ])
 	# Car is Vertical:
 	else:
 		# Check if the car will be within the Field bounds, if not return False
@@ -196,7 +196,7 @@ def createEmptyField():
 		# create new row
 		FIELD.append([])
 		# fill row with strings
-		for x in range(0, WIDTH - 1): 
+		for x in range(0, WIDTH - 1):
 			FIELD[y].append(EMPTY_SPOT_INT)
 		FIELD[y].append(EMPTY_SPOT_RIGHT_INT)
 
