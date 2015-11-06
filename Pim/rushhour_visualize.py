@@ -7,6 +7,7 @@ import math
 import time
 
 from Tkinter import *
+from trie2 import Trie, Node
 
 class RushhourVisualisation:
     # We moeten het aantal autos weten met de richting en de posities. De originele positie van de
@@ -145,5 +146,13 @@ if __name__ == '__main__':
     stateList.append([22,4,27,8])
 
     print stateList
+    trie = Trie(6, carList2)
+    for states in stateList:
+        print trie.checkState(states)
+    for states in stateList:
+        trie.addState(states)
+    for states in stateList:
+        print trie.checkState(states)
+
 
     runSimulation(carList2, stateList, 6, 6, 0.5)
