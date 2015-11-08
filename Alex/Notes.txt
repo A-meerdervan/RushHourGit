@@ -1,6 +1,76 @@
 
-- 	We moeten iets hebben zodat als je een auto 1 stap naar voren beweegt 
+- 	We moeten iets hebben zodat als je een auto 1 stap naar voren beweegt
 dat ie dan niet ook gaat proberen hem diezelfde stap weer terug te zetten als 1 van de opties
-Dat gebeurd sws niet doordat we elke optie vergelijken met de geschiedenis, maar 
-we kunnen het miss zo fixen dat ie m niet toevoegd als optie en dus niet elke keer zonder nut de geschiedenis moet comparen. 
+Dat gebeurd sws niet doordat we elke optie vergelijken met de geschiedenis, maar
+we kunnen het miss zo fixen dat ie m niet toevoegd als optie en dus niet elke keer zonder nut de geschiedenis moet comparen.
 
+-	Nu is het zo dat de rode auto nooit achteruit wil ofzo omdat bij getCOORDINATEStoFREE() hij alleen van uitgang tot de auto, punten pakt.
+
+Dept first search
+
+-	Ik heb de stack class pop functie zo gemaakt dat ie niet bij elke pop checkt of ie empty is
+	Dat omdat de pop alleen word aangeroepen in een while die elke keer checkt
+	Of de stack empty is. Daar heb ik een nieuwe functie, isEmpty() voor gemaakt
+
+-	Het optimailisatie verhaal waar we het eerst over hadden
+	dat je elke optie meteen aan de statelist moet toevoegen zodat je niet een 
+	oplossing krijgt die langer is dan nodig (zie mijn schrift ergens links
+	onderin)
+
+-	Hoe ik het had voorgesteld, van we slaan mogelijke moves op als [autonummer, -1 of 1]
+	Dan zit er veel minder op de stack. 
+	Dan blijf je moves maken in een spel sessie tot je niet meer mag, dan start je een nieuwe 
+	sessie door een state uit de statesArchive te halen.
+	Het opslaan naar de statesArchive is alleen de maincoordinates oplsaan
+	dat is geen dure operatie. 
+	Het andersom vertalen is wel een dure operatie. (van state naar game sessie)
+
+-	http://stackoverflow.com/questions/12864004/tracing-and-returning-a-path-in-depth-first-search#
+	Hiervandaan heb ik de manier genomen om je pad bij te houden met een map
+	Maar dat lijkt me erg traag
+	
+	http://stackoverflow.com/questions/9590299/how-can-i-find-the-actual-path-found-by-bfs
+	Deze gaat over BFS
+	
+
+
+def dfs(option):
+	#count = count + 1
+	# Stop the loop if option is a repeat or the solution
+	if optionIsNotNew(option):
+		return
+	if optionIsSolution(option):
+		SOLUTIONS.append(option)
+		# TODO Add solution to solutions
+		return
+	# add option to statelist
+	statelist.append(option)
+	# Loop all options while recusevely going deeper in
+	# the "tree" of possibilities
+	for newOption in allMoves(option):
+		dfs(newOption)
+
+def optionIsNotNew(option):
+	# kijk in de tree van Pim
+	# BS:
+	if option in STATE_LIST:
+		return True
+	else: return False
+
+
+def optionIsSolution(option):
+	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
+	# vrij zijn.
+
+while(stack not empty && solution not found) {
+	parent = stack.pop();
+	C = GenerateAllChildren(parent);
+	for (all x in C) {
+		if (x == solution) {
+			print(x);
+			stop;
+		} 
+		else {
+			stack.push(x);
+	}
+}

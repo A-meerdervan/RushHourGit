@@ -240,8 +240,9 @@ def printFieldFlipped():
 			RowString += ItemString
 		print RowString
 	print
-def possiblemoves():
-	for car in CARSLIST:
+
+#def possiblemoves():
+	#for car in CARSLIST:
 
 
 def giveErrorMessage(ErrorMessage):
@@ -249,5 +250,3 @@ def giveErrorMessage(ErrorMessage):
 
 if __name__ == '__main__':
 	run()
-	#for Row in FIELD:
-		#print Row
