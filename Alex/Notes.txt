@@ -4,7 +4,20 @@ dat ie dan niet ook gaat proberen hem diezelfde stap weer terug te zetten als 1 
 Dat gebeurd sws niet doordat we elke optie vergelijken met de geschiedenis, maar
 we kunnen het miss zo fixen dat ie m niet toevoegd als optie en dus niet elke keer zonder nut de geschiedenis moet comparen.
 
+
 -	Nu is het zo dat de rode auto nooit achteruit wil ofzo omdat bij getCOORDINATEStoFREE() hij alleen van uitgang tot de auto, punten pakt.
+
+Daan zijn allMoves functie:
+
+-	De CarsList buiten de functie geeft een immense preformance boost
+-	Ik denk dat een Car class chill is voor de leesbaarheid zodat er bijvoorbeeld
+	Direction staat inplaats van car[1] dat leest niet zo lekker
+-	De output hoeft geen stack te zijn, zo is prima
+	zie de dept-first-search implementatie
+-	Wat voegt de bord variable toe?
+-	Wat bedoel je daarna met die comments?
+-	Je hebt alle waarden gehardcoded, waneer je plus 6 doet moet je eigenlijk plus width doen bijvoorbeeld
+	dan werkt het voor alle afmetingen boards
 
 Dept first search
 
@@ -32,35 +45,6 @@ Dept first search
 	http://stackoverflow.com/questions/9590299/how-can-i-find-the-actual-path-found-by-bfs
 	Deze gaat over BFS
 	
-
-
-def dfs(option):
-	#count = count + 1
-	# Stop the loop if option is a repeat or the solution
-	if optionIsNotNew(option):
-		return
-	if optionIsSolution(option):
-		SOLUTIONS.append(option)
-		# TODO Add solution to solutions
-		return
-	# add option to statelist
-	statelist.append(option)
-	# Loop all options while recusevely going deeper in
-	# the "tree" of possibilities
-	for newOption in allMoves(option):
-		dfs(newOption)
-
-def optionIsNotNew(option):
-	# kijk in de tree van Pim
-	# BS:
-	if option in STATE_LIST:
-		return True
-	else: return False
-
-
-def optionIsSolution(option):
-	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
-	# vrij zijn.
 
 while(stack not empty && solution not found) {
 	parent = stack.pop();

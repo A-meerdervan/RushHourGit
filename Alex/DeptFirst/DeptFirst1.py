@@ -9,9 +9,12 @@ STATES_ARCHIVE = []
 SOLUTIONS = []
 # This contains the path to the solution backwards. 
 SOLUTION_PATHS = []
+CARS_LIST = []
 
 
 def main():
+	# TEST dept first algorithme:
+
 	initialState = 10
 	algorithm(initialState)
 	# print results
@@ -19,6 +22,18 @@ def main():
 	print SOLUTION_PATHS
 	print STATES_ARCHIVE
 
+	# TEST met Daans allMoves functie
+	RedCar = [20, 'h', 2, 'red']
+	Car1 = [22, 'v', 3, 'yellow']
+	Car2 = [9, 'v', 2, 'green']
+	Car3 = [10, 'h', 2, 'orange']
+	
+	CARS_LIST.append(RedCar)
+	CARS_LIST.append(Car1)
+	CARS_LIST.append(Car2)
+	CARS_LIST.append(Car3)
+
+	allMovesCopy()
 
 def algorithm(initialState):
 	stack = Stack()
@@ -97,6 +112,79 @@ def optionIsSolution(option):
 	if option in [8,13]:
 		return True
 	return False
+
+def allMovesCopy():
+
+
+	occupied =[]
+	moveOptions = [] # needs to be an stack
+	for car in CARS_LIST: # moet een array zijn [20,22,9,10]
+		if car[1] == 'h' and car[2] == 2 : # moet niet car[1] maar een link naar de class zijn
+			occupied.append(car[0])
+			occupied.append(car[0]+1)
+		elif car[1] == 'v' and car[2] == 2:
+			occupied.append(car[0])
+			occupied.append(car[0]+6)
+		elif car[1] == 'h':
+			occupied.append(car[0])
+			occupied.append(car[0]+6)
+			occupied.append(car[0]+12)
+		else:
+			occupied.append(car[0])
+			occupied.append(car[0]+6)
+			occupied.append(car[0]+12)
+
+	print occupied
+	print CARS_LIST[0][1] #yoo dit geeft mij de richting niet carslist[0].direction??
+	# moet mijn input [20,22,9,10] zijn of word dit iets anders? Ik kijk er morgen ook nog naar
+	i = 0
+	for car in CARS_LIST:
+		print car
+
+		state = car
+		if car[1] == 'h' and car[2] == 2 :
+			if car[0] -1 not in occupied and car[0] not in range(0,36,6): # moet niet op een bezette tegel of buiten het bord belanden
+
+				CARS_LIST[i][0] -= 1
+				moveOptions.append([CARS_LIST[0][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]]) # moet een stack zijn :D kijk stack.py weet niet of dat goed is
+				CARS_LIST[i][0] += 1
+				print 'hier'
+				print moveOptions
+			if car[0] + 2 not in occupied and car[0] not in range(4,40,6): # range om te kijken of de positie binnen het bereik van het bord is.
+				print car[0]
+				CARS_LIST[i][0] += 1
+				moveOptions.append([CARS_LIST[i][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]])
+				print 'false'
+
+		elif car[1] == 'v' and car[2] == 2:
+			if car[0] - 6 not in occupied  and car[0] not in  range(6):
+				car[0] -= 6
+				moveOptions.append([CARS_LIST[0][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]])
+
+			if car[0] + 12 not in occupied == False and car[0] != range(24,30):
+				car[0] += 6
+				moveOptions.append([CARS_LIST[0][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]])
+
+		elif car[1] == 'h' and car[2] == 3:
+			if car[0] - 1 not in occupied and car[0] not in  range(0,36,6) :
+				car[0] -= 1
+			if car[0] + 3 not in occupied and car[0] not in  range(3,39,6):
+				car[0] += 1
+		elif car[1] == 'v' and car[2] == 3:
+			if car[0] -6 not in occupied and car[0] not in  range(6):
+				print 'ga hierin'
+				CARS_LIST[i][0] -= 6
+				moveOptions.append([CARS_LIST[0][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]])
+				CARS_LIST[i][0] += 6
+			if car[0] + 18 not in occupied and car[0] < 18:
+				CARS_LIST[i][0] += 6
+				moveOptions.append([CARS_LIST[0][0],CARS_LIST[1][0],CARS_LIST[2][0],CARS_LIST[3][0]])
+				CARS_LIST[i][0] -= 6
+		print moveOptions
+		i += 1
+	print moveOptions
+	return moveOptions
 	
 if __name__ == '__main__':
 	main()
+	allMovesCopy()
