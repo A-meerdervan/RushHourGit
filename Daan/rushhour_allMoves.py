@@ -1,7 +1,8 @@
 
 from Car import Car
 
-
+WIDTH = 6
+HEIGHT = 6
 def allmoves():
 	RedCar = [20, 'h', 2, 'red']
 	Car1 = [22, 'v', 3, 'yellow']

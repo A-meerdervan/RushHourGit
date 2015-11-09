@@ -2,38 +2,13 @@
 
 class Car:
     """
-
+maintile is the tile with the closest path to the origin
+isHorizontal is a booleyan that gives true if Horizontal and is vertical if not Horizontal
+length is the length of a car
     """
 
-    def createCoordinateList(self):
-        self.Coordinates = []
-        self.Coordinates.append(self.MainCoordinate)
-        if self.Direction == "Vertical":
-            for i in range(1, self.Length):
-                self.Coordinates.append([self.MainCoordinate[0], self.MainCoordinate[1] + i])
-        elif self.Direction == "Horizontal":
-            for i in range(1, self.Length):
-                self.Coordinates.append([self.MainCoordinate[0] + i, self.MainCoordinate[1] ])                
-        else:
-            print "ERROR:   De richting van de auto was niet Vertical noch Horizontal"        
-
-
-    def __init__(self, MainCoordinate , Direction , Length, Number ):
+    def __init__(self, mainTile , isHorizontal , Length):
         # Redirect output to a queue
-        self.MainCoordinate = MainCoordinate
-        self.Direction = Direction
-        self.Number = Number
+        self.mainTile = mainTile
+        self.isHorizontal = isHorizontal
         self.Length = Length
-        self.Coordinates = []
-        
-        self.createCoordinateList()
-
-    def setMainCoordinate(self, NewMainCoordinate):
-        self.MainCoordinate = NewMainCoordinate
-        self.createCoordinateList()
-
-
-    
-
-
-
