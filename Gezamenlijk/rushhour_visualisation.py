@@ -7,7 +7,6 @@ import math
 import time
 
 from Tkinter import *
-from trie2 import Trie, Node
 
 class RushhourVisualisation:
     # We moeten het aantal autos weten met de richting en de posities. De originele positie van de
