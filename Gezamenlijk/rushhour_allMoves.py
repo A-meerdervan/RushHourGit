@@ -1,28 +1,33 @@
 from Car import Car
 from CarsList import CarsList
+CARS_LIST = CarsList()
+
 WIDTH = 6
 HEIGHT = 6
-def allmoves():
-	RedCar = [20, True, 2]
-	Car1 = [22, False, 3]
-	Car2 = [9, False, 2]
-	Car3 = [10, True, 2]
-	carsList = []
-	carsList.append(RedCar)
-	carsList.append(Car1)
-	carsList.append(Car2)
-	carsList.append(Car3)
+def main():
+
+	# TEST met Daans allMoves functie
+	RedCar = Car(20, True, 2)
+	Car1 = Car(22, False, 3)
+	Car2 = Car(9, False, 2)
+	Car3 = Car(10, True, 2)
+
+	CARS_LIST.cars.append(Car1)
+	CARS_LIST.cars.append(Car2)
+	CARS_LIST.cars.append(Car3)
+	CARS_LIST.cars.append(RedCar)
+	state = [20,22,9,10]
+	allMoves(state)
+def allmoves(state):
 
 	occupied =[]
 	moveOptions = [] # needs to be an stack
 
-
-	state = [20,22,9,10] #testen
-
-
+	print 'hier'
 	k = 0
-	for car in CarsList: # moet een array zijn [20,22,9,10]
-
+	for car in CARS_LIST.cars: # moet een array zijn [20,22,9,10]
+		print car.isHorizontal
+		print 'hier'
 		if car.isHorizontal and car.length == 2 : # moet niet car[1] maar een link naar de class zijn
 			occupied.append(state[k])
 			occupied.append(state[k]+1)
@@ -41,12 +46,11 @@ def allmoves():
 			occupied.append(state[k]+HEIGHT*2)
 	k += 1
 	print occupied
-	print carsList[0][1] #yoo dit geeft mij de richting niet carslist[0].direction??
-	# moet mijn input [20,22,9,10] zijn of word dit iets anders? Ik kijk er morgen ook nog naar
-	i = 0
-	for car in carsList:
-		print car
 
+	i = 0
+	print 'hier'
+	for car in CARS_LIST.cars:
+		print car.isHorizontal
 		if car.isHorizontal and car.length == 2 :
 			if state[i] -1 not in occupied and state[0] not in range(0,36,6): # moet niet op een bezette tegel of buiten het bord belanden
 				state[i] -= 1
