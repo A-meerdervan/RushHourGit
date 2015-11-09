@@ -1,5 +1,6 @@
-import CarsList from CarsList
-import Car from Car
+
+from CarsList import CarsList 
+from Car import Car 
 
 carsList = CarsList()
 
@@ -8,7 +9,7 @@ def ewa():
 	Car1 = Car(22, False, 3)
 	carsList.cars.append(RedCar)
 	carsList.cars.append(Car1)
-	return True
+	print carsList.cars[1].isHorizontal
 
 if False or ewa():
 	print "yolo"
