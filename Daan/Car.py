@@ -9,6 +9,6 @@ length is the length of a car
 
     def __init__(self, mainTile , isHorizontal , length):
         # Redirect output to a queue
-        self.mainTile = mainTile
+        self.firstMainTile = mainTile
         self.isHorizontal = isHorizontal
         self.length = length
