@@ -1,7 +1,7 @@
 
+#from Car import Car
 
-WIDTH = 6
-HEIGHT = 6
+
 def allmoves():
 	RedCar = [20, 'h', 2, 'red']
 	Car1 = [22, 'v', 3, 'yellow']
@@ -15,7 +15,6 @@ def allmoves():
 
 	occupied =[]
 	moveOptions = [] # needs to be an stack
-	bord = [20,22,9,10]
 	for car in carsList: # moet een array zijn [20,22,9,10]
 		if car[1] == 'h' and car[2] == 2 : # moet niet car[1] maar een link naar de class zijn
 			occupied.append(car[0])
@@ -23,12 +22,10 @@ def allmoves():
 		elif car[1] == 'v' and car[2] == 2:
 			occupied.append(car[0])
 			occupied.append(car[0]+6)
-		# The car is 3 long and horizontal:
 		elif car[1] == 'h':
 			occupied.append(car[0])
 			occupied.append(car[0]+6)
 			occupied.append(car[0]+12)
-		# The car is 3 long and veritcal:
 		else:
 			occupied.append(car[0])
 			occupied.append(car[0]+6)
@@ -84,27 +81,27 @@ def allmoves():
 		i += 1
 	print moveOptions
 	print 'hello'
-# crap
-	# stateList = []
-	# startState = []
-	# for cars in carsList:
-	#         startState.append(cars[0]+cars[1]*6)
+# # crap
+# 	stateList = []
+# 	startState = []
+# 	for cars in carsList:
+# 	        startState.append(cars[0]+cars[1]*6)
 
-	# stateList.append(startState)
-	# stateList.append([19,22,9,10])
-	# stateList.append([19,22,15,10])
-	# stateList.append([19,22,21,10])
-	# stateList.append([19,22,27,10])
-	# stateList.append([19,22,27,9])
-	# stateList.append([19,22,27,8])
-	# stateList.append([19,16,27,8])
-	# stateList.append([19,10,27,8])
-	# stateList.append([19,4,27,8])
-	# stateList.append([20,4,27,8])
-	# stateList.append([21,4,27,8])
-	# stateList.append([22,4,27,8])
+# 	stateList.append(startState)
+# 	stateList.append([19,22,9,10])
+# 	stateList.append([19,22,15,10])
+# 	stateList.append([19,22,21,10])
+# 	stateList.append([19,22,27,10])
+# 	stateList.append([19,22,27,9])
+# 	stateList.append([19,22,27,8])
+# 	stateList.append([19,16,27,8])
+# 	stateList.append([19,10,27,8])
+# 	stateList.append([19,4,27,8])
+# 	stateList.append([20,4,27,8])
+# 	stateList.append([21,4,27,8])
+# 	stateList.append([22,4,27,8])
 
-	#print stateList
+# 	print stateList
 
 if __name__ == '__main__':
 
