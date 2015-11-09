@@ -9,7 +9,8 @@ STATES_ARCHIVE = []
 SOLUTIONS = []
 # This contains the path to the solution backwards. 
 SOLUTION_PATHS = []
-CARS_LIST = []
+CARS_LIST = CarsList()
+
 
 
 def main():
@@ -22,16 +23,18 @@ def main():
 	print SOLUTION_PATHS
 	print STATES_ARCHIVE
 
+	print
+	print
 	# TEST met Daans allMoves functie
-	RedCar = [20, 'h', 2, 'red']
-	Car1 = [22, 'v', 3, 'yellow']
-	Car2 = [9, 'v', 2, 'green']
-	Car3 = [10, 'h', 2, 'orange']
+	RedCar = Car(20, True, 2)
+	Car1 = Car(22, False, 3)
+	Car2 = Car(9, False, 2)
+	Car3 = Car(10, True, 2)
 	
-	CARS_LIST.append(RedCar)
-	CARS_LIST.append(Car1)
-	CARS_LIST.append(Car2)
-	CARS_LIST.append(Car3)
+	CARS_LIST.cars.append(Car1)
+	CARS_LIST.cars.append(Car2)
+	CARS_LIST.cars.append(Car3)
+	CARS_LIST.cars.append(RedCar)
 
 	allMovesCopy()
 
@@ -115,7 +118,6 @@ def optionIsSolution(option):
 
 def allMovesCopy():
 
-
 	occupied =[]
 	moveOptions = [] # needs to be an stack
 	for car in CARS_LIST: # moet een array zijn [20,22,9,10]
@@ -187,4 +189,3 @@ def allMovesCopy():
 	
 if __name__ == '__main__':
 	main()
-	allMovesCopy()
