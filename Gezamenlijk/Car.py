@@ -11,4 +11,4 @@ length is the length of a car
         # Redirect output to a queue
         self.mainTile = mainTile
         self.isHorizontal = isHorizontal
-        self.Length = Length
+        self.length = Length

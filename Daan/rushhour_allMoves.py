@@ -18,7 +18,7 @@ def main():
 	CARS_LIST.cars.append(RedCar)
 	state = [20,22,9,10]
 	allMoves(state)
-def allmoves(state):
+def allMoves(state):
 
 	occupied =[]
 	moveOptions = [] # needs to be an stack
