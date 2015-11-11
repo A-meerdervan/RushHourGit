@@ -50,15 +50,9 @@ class Tree(object):
             self.pointer = self.pointer.children[self.state[cars]]
         return self.pointer
 
-    def getPath(self, currentState):
-        self.path = [currentState]
-        self.tmpPath = []
-        self.pointer = goToEndNode(currentState)
-        while self.pointer.parentState != currentState:
-            self.tmpPath.append(pointer.parentState)
-            self.pointer = self.pointer.goToEndNode(pointer.parentState)
-        self.path.append(self.tmpPath.reverse())
-        return self.path
+    def getParent(self, state):
+        self.parent = goToEndNode(state).parentState
+        return self.parent
 
     def lengthArchive(self):
         return self.counter
@@ -83,4 +77,4 @@ class EndNode(object):
         self.parentState = []
 
     def setParentState(self, parentState):
-        self.parent = parentState
+        self.parentState = parentState
