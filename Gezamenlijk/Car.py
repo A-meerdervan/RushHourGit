@@ -7,8 +7,8 @@ isHorizontal is a booleyan that gives true if Horizontal and is vertical if not 
 length is the length of a car
     """
 
-    def __init__(self, mainTile , isHorizontal , Length):
+    def __init__(self, firstMainTile , isHorizontal , Length):
         # Redirect output to a queue
-        self.mainTile = mainTile
+        self.firstMainTile = firstMainTile
         self.isHorizontal = isHorizontal
         self.length = Length

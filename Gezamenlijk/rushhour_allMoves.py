@@ -7,43 +7,44 @@ HEIGHT = 6
 def main():
 
 	# TEST met Daans allMoves functie
-	# RedCar = Car(20, True, 2)
-	# Car1 = Car(0, False, 2)
-	# Car2 = Car(12, True, 2)
-	# Car3 = Car(3, False, 2)
-	# Car4 = Car(4, True, 2)
-	# Car5 = Car(10, True, 2)
-	# Car6 = Car(14, True, 2)
-	# Car7 = Car(16, False, 2)
-	# Car8 = Car(17, False, 3)
-	# Car9 = Car(25, True, 2)
-	# Car10 = Car(27, True, 2)
-	# Car11 = Car(32, True, 2)
-	# Car12 = Car(34, True, 2)
-	#
-	# CARS_LIST.cars.append(Car1)
-	# CARS_LIST.cars.append(Car2)
-	# CARS_LIST.cars.append(Car3)
-	# CARS_LIST.cars.append(Car4)
-	# CARS_LIST.cars.append(Car5)
-	# CARS_LIST.cars.append(Car6)
-	# CARS_LIST.cars.append(Car7)
-	# CARS_LIST.cars.append(Car8)
-	# CARS_LIST.cars.append(Car9)
-	# CARS_LIST.cars.append(Car10)
-	# CARS_LIST.cars.append(Car11)
-	# CARS_LIST.cars.append(Car12)
-	# CARS_LIST.cars.append(RedCar)
-	# state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
-	Car1 = Car(18,True,2)
-	Car2 = Car(9,False,2)
-	CARS_LIST.cars.append(Car2)
+	RedCar = Car(20, True, 2)
+	Car1 = Car(0, False, 2)
+	Car2 = Car(12, True, 2)
+	Car3 = Car(3, False, 2)
+	Car4 = Car(4, True, 2)
+	Car5 = Car(10, True, 2)
+	Car6 = Car(14, True, 2)
+	Car7 = Car(16, False, 2)
+	Car8 = Car(17, False, 3)
+	Car9 = Car(25, True, 2)
+	Car10 = Car(27, True, 2)
+	Car11 = Car(32, True, 2)
+	Car12 = Car(34, True, 2)
+	
 	CARS_LIST.cars.append(Car1)
-	state = [9,18]
-	occupiedo = occupied(state)
-	optionIsSolution(state,occupiedo)
+	CARS_LIST.cars.append(Car2)
+	CARS_LIST.cars.append(Car3)
+	CARS_LIST.cars.append(Car4)
+	CARS_LIST.cars.append(Car5)
+	CARS_LIST.cars.append(Car6)
+	CARS_LIST.cars.append(Car7)
+	CARS_LIST.cars.append(Car8)
+	CARS_LIST.cars.append(Car9)
+	CARS_LIST.cars.append(Car10)
+	CARS_LIST.cars.append(Car11)
+	CARS_LIST.cars.append(Car12)
+	CARS_LIST.cars.append(RedCar)
+	state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
+	# Car1 = Car(18,True,2)
+	# Car2 = Car(9,False,2)
+	# CARS_LIST.cars.append(Car2)
+	# CARS_LIST.cars.append(Car1)
+	# state = [9,18]
+	allMoves(state)
+	occupiedo = getOccupiedTiles(state)
+	# optionIsSolution(state,occupiedo)
 
-def occupied(state):
+def getOccupiedTiles(state):
 	occupied = []
 	k = 0
 	for car in CARS_LIST.cars:
@@ -66,11 +67,13 @@ def occupied(state):
 			occupied.append(state[k]+HEIGHT*2)
 		k += 1
 	return occupied
+
 def allMoves(state):
 	moveOptions = []
 	i = 0
 	bord = copy.deepcopy(state)
 	bord2 = copy.deepcopy(state)
+	occupied = getOccupiedTiles(state)
 
 	for car in CARS_LIST.cars:
 		bord = copy.deepcopy(state)
@@ -88,7 +91,7 @@ def allMoves(state):
 			if state[i] - WIDTH not in occupied  and state[i] not in  range(6):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 12 not in occupied and state[i] != range(24,30):
+			if state[i] + 12 not in occupied and state[i] not in range(24,30):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 
@@ -108,7 +111,6 @@ def allMoves(state):
 				bord2[i] += HEIGHT
 				moveOptions.append(bord2)
 		i += 1
-
 	return moveOptions
 
 def optionIsSolution(state,occupied):
@@ -130,7 +132,7 @@ def optionIsSolution(state,occupied):
 		tileCheck = state[-1] + number
 		print tileCheck
 		if tileCheck in occupied:
-			p#rint 'false'
+			#print 'false'
 			return False
 	#print 'hier'
 	return True

@@ -80,28 +80,7 @@ def allmoves():
 		print moveOptions
 		i += 1
 	print moveOptions
-	print 'hello'
-# # crap
-# 	stateList = []
-# 	startState = []
-# 	for cars in carsList:
-# 	        startState.append(cars[0]+cars[1]*6)
-
-# 	stateList.append(startState)
-# 	stateList.append([19,22,9,10])
-# 	stateList.append([19,22,15,10])
-# 	stateList.append([19,22,21,10])
-# 	stateList.append([19,22,27,10])
-# 	stateList.append([19,22,27,9])
-# 	stateList.append([19,22,27,8])
-# 	stateList.append([19,16,27,8])
-# 	stateList.append([19,10,27,8])
-# 	stateList.append([19,4,27,8])
-# 	stateList.append([20,4,27,8])
-# 	stateList.append([21,4,27,8])
-# 	stateList.append([22,4,27,8])
-
-# 	print stateList
+	return moveOptions
 
 if __name__ == '__main__':
 

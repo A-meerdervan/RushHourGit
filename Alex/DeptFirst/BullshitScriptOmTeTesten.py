@@ -2,14 +2,18 @@
 from CarsList import CarsList 
 from Car import Car 
 
-carsList = CarsList()
+carsList = Car(12, True, 4)
 
 def ewa():
-	RedCar = Car(20, True, 2)
-	Car1 = Car(22, False, 3)
-	carsList.cars.append(RedCar)
-	carsList.cars.append(Car1)
-	print carsList.cars[1].isHorizontal
+	carsList.cars.append(Car(13,True, 5))
+	print carsList.cars[0].FirstMainTile
+def fallaG():
+	print carsList.cars[0].FirstMainTile
 
-if False or ewa():
-	print "yolo"
+def main():
+	global carsList; carsList = CarsList()
+	ewa()
+	fallaG()
+
+if __name__ == '__main__':
+	main()
