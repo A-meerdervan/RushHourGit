@@ -7,42 +7,45 @@ HEIGHT = 6
 def main():
 
 	# TEST met Daans allMoves functie
-	RedCar = Car(20, True, 2)
-	Car1 = Car(0, False, 2)
-	Car2 = Car(12, True, 2)
-	Car3 = Car(3, False, 2)
-	Car4 = Car(4, True, 2)
-	Car5 = Car(10, True, 2)
-	Car6 = Car(14, True, 2)
-	Car7 = Car(16, False, 2)
-	Car8 = Car(17, False, 3)
-	Car9 = Car(25, True, 2)
-	Car10 = Car(27, True, 2)
-	Car11 = Car(32, True, 2)
-	Car12 = Car(34, True, 2)
-
-	CARS_LIST.cars.append(Car1)
+	# RedCar = Car(20, True, 2)
+	# Car1 = Car(0, False, 2)
+	# Car2 = Car(12, True, 2)
+	# Car3 = Car(3, False, 2)
+	# Car4 = Car(4, True, 2)
+	# Car5 = Car(10, True, 2)
+	# Car6 = Car(14, True, 2)
+	# Car7 = Car(16, False, 2)
+	# Car8 = Car(17, False, 3)
+	# Car9 = Car(25, True, 2)
+	# Car10 = Car(27, True, 2)
+	# Car11 = Car(32, True, 2)
+	# Car12 = Car(34, True, 2)
+	#
+	# CARS_LIST.cars.append(Car1)
+	# CARS_LIST.cars.append(Car2)
+	# CARS_LIST.cars.append(Car3)
+	# CARS_LIST.cars.append(Car4)
+	# CARS_LIST.cars.append(Car5)
+	# CARS_LIST.cars.append(Car6)
+	# CARS_LIST.cars.append(Car7)
+	# CARS_LIST.cars.append(Car8)
+	# CARS_LIST.cars.append(Car9)
+	# CARS_LIST.cars.append(Car10)
+	# CARS_LIST.cars.append(Car11)
+	# CARS_LIST.cars.append(Car12)
+	# CARS_LIST.cars.append(RedCar)
+	# state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
+	Car1 = Car(18,True,2)
+	Car2 = Car(9,False,2)
 	CARS_LIST.cars.append(Car2)
-	CARS_LIST.cars.append(Car3)
-	CARS_LIST.cars.append(Car4)
-	CARS_LIST.cars.append(Car5)
-	CARS_LIST.cars.append(Car6)
-	CARS_LIST.cars.append(Car7)
-	CARS_LIST.cars.append(Car8)
-	CARS_LIST.cars.append(Car9)
-	CARS_LIST.cars.append(Car10)
-	CARS_LIST.cars.append(Car11)
-	CARS_LIST.cars.append(Car12)
-	CARS_LIST.cars.append(RedCar)
-	state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
-	allMoves(state)
-def allMoves(state):
+	CARS_LIST.cars.append(Car1)
+	state = [9,18]
+	occupiedo = occupied(state)
+	optionIsSolution(state,occupiedo)
 
-	occupied =[]
-	moveOptions = [] # needs to be an stack
-
+def occupied(state):
+	occupied = []
 	k = 0
-
 	for car in CARS_LIST.cars:
 
 		if car.isHorizontal and car.length == 2 : # moet niet car[1] maar een link naar de class zijn
@@ -62,9 +65,9 @@ def allMoves(state):
 			occupied.append(state[k]+HEIGHT)
 			occupied.append(state[k]+HEIGHT*2)
 		k += 1
-	#  ctrl d geeft select voor veranderen variabele
-	# werkt niet er moet eerst nog een aparte variabele aangemaakt worden om de state niet te veranderen anders krijg je eeuwig linkende dingen en stuff kutzooi!.
-	# werkt niet want na 1 auto moet het weer terug naar he begin
+	return occupied
+def allMoves(state):
+	moveOptions = []
 	i = 0
 	bord = copy.deepcopy(state)
 	bord2 = copy.deepcopy(state)
@@ -105,7 +108,32 @@ def allMoves(state):
 				bord2[i] += HEIGHT
 				moveOptions.append(bord2)
 		i += 1
+
 	return moveOptions
+
+def optionIsSolution(state,occupied):
+	#checkt nog te veel maar Alex zeurt
+	print occupied
+	arraycounter =[]
+	EXIT = 22
+	counter = 1
+	print state[-1]
+	while state[-1] < EXIT:
+		counter += 1
+		arraycounter.append(counter)
+		state[-1] += 1
+	state[-1] = state[-1] - counter + 1
+	print arraycounter
+
+	for number in arraycounter:
+		print number,state[-1]
+		tileCheck = state[-1] + number
+		print tileCheck
+		if tileCheck in occupied:
+			p#rint 'false'
+			return False
+	#print 'hier'
+	return True
 
 if __name__ == '__main__':
 
