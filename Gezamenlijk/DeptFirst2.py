@@ -11,7 +11,7 @@ STATES_ARCHIVE = []
 # this contains the solution state and it's parent state like:
 # [state, parentState]
 SOLUTIONS = []
-# This contains the path to the solution backwards. 
+# This contains the path to the solution backwards.
 SOLUTION_PATHS = []
 WIDTH = 6
 HEIGHT = 6
@@ -26,7 +26,7 @@ def main():
 	# Car2 = Car(9, False, 2)
 	# Car3 = Car(10, True, 2)
 	# RedCar = Car(20, True, 2)
-	
+
 	# CARS_LIST.cars.append(Car1)
 	# CARS_LIST.cars.append(Car2)
 	# CARS_LIST.cars.append(Car3)
@@ -45,7 +45,7 @@ def main():
 	Car10 = Car(27, True, 2)
 	Car11 = Car(32, True, 2)
 	Car12 = Car(34, True, 2)
-	
+
 	CARS_LIST.cars.append(Car1)
 	CARS_LIST.cars.append(Car2)
 	CARS_LIST.cars.append(Car3)
@@ -67,12 +67,12 @@ def main():
 	path1 = SOLUTION_PATHS[0]
 
 	# print results
-	print "length solutions ", len(SOLUTIONS)
+	# print "length solutions ", len(SOLUTIONS)
 	#rint SOLUTIONS
-	print SOLUTION_PATHS
+	# print SOLUTION_PATHS
 
-	
-	runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
+
+	# runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
 
 def algorithm(initialState):
 	stack = Stack()
@@ -90,7 +90,7 @@ def algorithm(initialState):
 				continue
 			elif optionIsSolution(newOption):
 				SOLUTIONS.append([newOption, option])
-				#getSolutionPaths()				
+				#getSolutionPaths()
 				continue
 
 			else:
@@ -101,7 +101,7 @@ def algorithm(initialState):
 				STATES_ARCHIVE.addState(newOption, option)
 			#if count == 150:
 				#rint "Stack : ", stack.items
-	print "Stack : ", stack.items
+	# print "Stack : ", stack.items
 	getSolutionPaths()
 
 def getSolutionPaths():
@@ -114,17 +114,17 @@ def getSolutionPaths():
 		notAtRoot = True
 		# find the parent of the parent until the root is reached
 		while notAtRoot:
-			print "Not at root"
+			# print "Not at root"
 			#find parent state
 			parentOfParrent = STATES_ARCHIVE.getParent(parent) # dit is [ding zelf, zijn pap]
 			path.append(parent)
-			print "Parent of parent: ", parentOfParrent
-			print "Intital state: ", INITIAL_STATE
+			# print "Parent of parent: ", parentOfParrent
+			# print "Intital state: ", INITIAL_STATE
 			if parentOfParrent == INITIAL_STATE:
 				notAtRoot = False
-				print "bij de root"
+				# print "bij de root"
 			parent = parentOfParrent
-		print path
+		# print path
 		SOLUTION_PATHS.append(path)
 		count += 1
 
@@ -134,7 +134,7 @@ def optionIsNotNew(option):
 
 # def optionIsSolution(option):
 # 	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
-# 	# vrij zijn. 
+# 	# vrij zijn.
 # 	if option in [8,13]:
 # 		return True
 # 	return False
@@ -186,7 +186,7 @@ def allMoves(state):
 	i = 0
 	bord = copy.deepcopy(state)
 	bord2 = copy.deepcopy(state)
-	occupied = getOccupiedTiles(state)		
+	occupied = getOccupiedTiles(state)
 
 	for car in CARS_LIST.cars:
 		bord = copy.deepcopy(state)
@@ -226,6 +226,6 @@ def allMoves(state):
 		i += 1
 
 	return moveOptions
-	
+
 if __name__ == '__main__':
 	main()

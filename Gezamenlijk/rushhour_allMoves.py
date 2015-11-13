@@ -20,7 +20,7 @@ def main():
 	Car10 = Car(27, True, 2)
 	Car11 = Car(32, True, 2)
 	Car12 = Car(34, True, 2)
-	
+
 	CARS_LIST.cars.append(Car1)
 	CARS_LIST.cars.append(Car2)
 	CARS_LIST.cars.append(Car3)
@@ -115,22 +115,22 @@ def allMoves(state):
 
 def optionIsSolution(state,occupied):
 	#checkt nog te veel maar Alex zeurt
-	print occupied
+	# print occupied
 	arraycounter =[]
 	EXIT = 22
 	counter = 1
-	print state[-1]
+	# print state[-1]
 	while state[-1] < EXIT:
 		counter += 1
 		arraycounter.append(counter)
 		state[-1] += 1
 	state[-1] = state[-1] - counter + 1
-	print arraycounter
+	# print arraycounter
 
 	for number in arraycounter:
-		print number,state[-1]
+		# print number,state[-1]
 		tileCheck = state[-1] + number
-		print tileCheck
+		# print tileCheck
 		if tileCheck in occupied:
 			#print 'false'
 			return False
