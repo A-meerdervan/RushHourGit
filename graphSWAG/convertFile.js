@@ -28,15 +28,23 @@ transformy = createTransform([-200,400],[height,0])
 distanceFromLeft = transformx(30)
 console.log('hello')
 // y = 0
-ctx.strokeRect(distanceFromLeft,transformy(0),transformx(366),1)
+//ctx.strokeRect(distanceFromLeft,transformy(0),transformx(366),1)
 //x-as
 ctx.strokeRect(distanceFromLeft,transformy(-100),transformx(366),1)
 // y-as
 ctx.beginPath();
 ctx.moveTo(distanceFromLeft,transformy(350));
-ctx.lineWidth = 2;
+ctx.lineWidth = 1;
 ctx.lineTo(distanceFromLeft,transformy(-100));
 ctx.stroke()
+ctx.closePath()
+
+        // ctx.beginPath();
+        // ctx.moveTo(startX, startY);
+        // ctx.lineTo(endX, endY);
+        // ctx.stroke();
+        // ctx.closePath(); 
+
 // zet alle maanden er in met een streepje
 months = ["January","February","March","April","May","June","July","August",
 "September","October","November","December"]
@@ -49,7 +57,9 @@ for ( var l = 0; l < 12; l++){
   //zonder loop te doen??
   ctx.moveTo(transformx(30+30.5*(l+1)),transformy(-100));
   ctx.lineTo(transformx(30+30.5*(l+1)),transformy(-90));
+  ctx.closePath()
   ctx.stroke();
+
 };
 ctx.font = '800 20px Arial'
 ctx.fillText("month",transformx(391),transformy(-120))
@@ -70,13 +80,16 @@ ctx.strokeRect(distanceFromLeft-5,transformy(-100),5,1)
 
 // voor elke variabele in de array line aanmaken!
 k = 30
-for ( var i = 0 ; i < 366; i++){
+ctx.beginPath()
+ctx.moveTo(transformx(30), transformy(tempertature[0]))
+for ( var i = 1 ; i < 365; i++){
   ctx.lineTo(transformx(k),transformy(tempertature[i]))
   k++
 };
+ctx.closePath()
 ctx.stroke()
-ctx.font = "48px serif";
-ctx.fillText("Maximum Temperature in the Bild(NL) 1996", 90, 50);
+// ctx.font = "48px serif";
+// ctx.fillText("Maximum Temperature in the Bild(NL) 1996", 90, 50);
 
 
 
