@@ -1,15 +1,32 @@
 
+"""
+This file holds a way to implement basic stack powered 
+depth first search with simple list type archive structures
+The getSolutionPaths method has a way to get the path to a solution
+but this is now done with the PathTracker class wich has a dynamic
+list of states that have been undertaken to get where the algorithm
+is now
+
+"""
+
+
 from Stack import Stack
+from PathTracker import PathTracker
+import copy
 
 # this contains the state and it's parent state like:
 # [state, parentState]
 STATES_ARCHIVE = []
+# This Stack shrinks and grows, it keeps
+# track where the algorithm is in the possibilities tree
+# it is used to find the path to a solution 
+PATH_TRACKER = PathTracker()
 # this contains the solution state and it's parent state like:
 # [state, parentState]
 SOLUTIONS = []
 # This contains the path to the solution backwards. 
 SOLUTION_PATHS = []
-CARS_LIST = CarsList()
+
 
 
 
@@ -19,49 +36,61 @@ def main():
 	initialState = 10
 	algorithm(initialState)
 	# print results
-	print SOLUTIONS
+	#print SOLUTIONS
 	print SOLUTION_PATHS
-	print STATES_ARCHIVE
+	#print STATES_ARCHIVE
 
 	print
 	print
-	# TEST met Daans allMoves functie
-	RedCar = Car(20, True, 2)
-	Car1 = Car(22, False, 3)
-	Car2 = Car(9, False, 2)
-	Car3 = Car(10, True, 2)
-	
-	CARS_LIST.cars.append(Car1)
-	CARS_LIST.cars.append(Car2)
-	CARS_LIST.cars.append(Car3)
-	CARS_LIST.cars.append(RedCar)
-
-	allMovesCopy()
 
 def algorithm(initialState):
 	stack = Stack()
 	# add first state
 	stack.push(initialState)
 	STATES_ARCHIVE.append([initialState, 0])
+	MaxDepth = 100000
 	# loop all possible moves
-	count = 0
 	while stack.isNotEmpty():
-		count += 1
 		option = stack.pop();
+		if len(PATH_TRACKER.path) >= MaxDepth:
+			PATH_TRACKER.decreaseChildCount()
+			PATH_TRACKER.goUpInTreeIfNeeded()
+			continue
+		allOptions = allMoves(option)
+		PATH_TRACKER.push( option, len(allOptions) )
 		# Loop all options and (conditionaly) store them on the stack to revisit later
-		for newOption in allMoves(option):
+		for newOption in allOptions:
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
+				# decrease child count with one
+				PATH_TRACKER.decreaseChildCount()
+				print "had deze al ", newOption, PATH_TRACKER.path
 				continue
 			elif optionIsSolution(newOption):
 				SOLUTIONS.append([newOption, option])
+				SOLUTION_PATHS.append(copy.deepcopy(PATH_TRACKER.path)) #.append([newOption, 0]))
+				SOLUTION_PATHS[-1].append(newOption)
+				# decrease child count with one
+				PATH_TRACKER.decreaseChildCount()
+				# When a shorter solution is found the max depth of the search is set to that length
+				if len(PATH_TRACKER.path) < MaxDepth:
+					# The -1 is so that only shorter solutions are considered
+					MaxDepth = len(PATH_TRACKER.path) - 1
+					# This will break the for loop so that solutions with equal length
+					# are not evaluated
+					break
+					print "maxdept ", MaxDepth
+				print "Solution found", newOption, PATH_TRACKER.path
 				continue
 			else:
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
 				# add the option to the states archive
 				STATES_ARCHIVE.append([newOption, option])
-	getSolutionPaths()
+		# If this node has no children go up as many levels as needed
+		print "voor de while ", PATH_TRACKER.path
+		PATH_TRACKER.goUpInTreeIfNeeded()
+	#getSolutionPaths()
 
 def getSolutionPaths():
 	for solution in SOLUTIONS:
@@ -98,7 +127,7 @@ def dfs(option):
 		dfs(newOption)
 
 def allMoves(option):
-	return [option +1, option - 1]
+	return [option + 1, option - 1, option - 2]
 	
 def optionIsNotNew(option):
 	# kijk in de tree van Pim
@@ -112,7 +141,7 @@ def optionIsNotNew(option):
 def optionIsSolution(option):
 	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
 	# vrij zijn. 
-	if option in [8,13]:
+	if option in [4, 5,12]:
 		return True
 	return False
 

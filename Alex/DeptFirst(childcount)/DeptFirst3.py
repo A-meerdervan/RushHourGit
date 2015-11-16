@@ -3,6 +3,7 @@ from Stack import Stack
 from CarsList import CarsList
 from tree import Tree
 from Car import Car
+from PathTracker import PathTracker
 import copy
 from rushhour_visualisation import *
 # this contains the state and it's parent state like:
@@ -13,6 +14,10 @@ STATES_ARCHIVE = []
 SOLUTIONS = []
 # This contains the path to the solution backwards.
 SOLUTION_PATHS = []
+# This list shrinks and grows, it keeps
+# track where the algorithm is in the possibilities tree
+# it is used to find the path to a solution 
+PATH_TRACKER = PathTracker()
 WIDTH = 6
 HEIGHT = 6
 CARS_LIST = CarsList()
@@ -55,8 +60,13 @@ def main():
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
 	algorithm(INITIAL_STATE)
+	
 	print "Algorithm is done"
-	path1 = SOLUTION_PATHS[0]
+	path1 = SOLUTION_PATHS[-1]
+	print len(SOLUTION_PATHS)
+	print
+	for solution in SOLUTION_PATHS:
+		print len(solution)
 
 	# print results
 	# print "length solutions ", len(SOLUTIONS)
@@ -66,33 +76,63 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-
-	# runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
+	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, HEIGHT, 0.2)
 
 def algorithm(initialState):
 	stack = Stack()
 	# add first state
 	stack.push(initialState)
 	STATES_ARCHIVE.addState(initialState, initialState)
+	MaxDepth = 100000
 	# loop all possible moves
 	while stack.isNotEmpty():
 		option = stack.pop();
+		if len(PATH_TRACKER.path) >= MaxDepth:
+			PATH_TRACKER.decreaseChildCount()
+			PATH_TRACKER.goUpInTreeIfNeeded()
+			continue
+		allOptions = allMoves(option)
+		PATH_TRACKER.push( option, len(allOptions) )
+
 		# Loop all options and (conditionaly) store them on the stack to revisit later
-		for newOption in allMoves(option):
+		for newOption in allOptions:
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
+				# decrease child count with one
+				PATH_TRACKER.decreaseChildCount()
 				continue
 			elif optionIsSolution(newOption):
 				SOLUTIONS.append([newOption, option])
-				#getSolutionPaths()
+				SOLUTION_PATHS.append(deepCopyList(PATH_TRACKER.path))
+				SOLUTION_PATHS[-1].append(newOption)
+				# decrease child count with one
+				PATH_TRACKER.decreaseChildCount()
+				print "max dept wanneer oplossing is gevonden", MaxDepth
+				print "length path", len(PATH_TRACKER.path)
+				# When a shorter solution is found the max depth of the search is set to that length
+				if len(PATH_TRACKER.path) <= MaxDepth:
+					# The -1 is so that only shorter solutions are considered
+					MaxDepth = len(PATH_TRACKER.path) - 1
+					# This will break the for loop so that solutions with equal length
+					# are not evaluated
+					print "maxdept ", MaxDepth
+					break
 				continue
-
 			else:
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
 				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
+		# If this node has no children go up as many levels as needed
+		PATH_TRACKER.goUpInTreeIfNeeded()
 	#getSolutionPaths()
+
+def deepCopyList(list):
+	copiedList = []
+	# for item in list:
+	# 	copiedList.append(item)
+	copiedList = list[::]
+	return copiedList
 
 def getSolutionPaths():
 	# count = 0
@@ -174,13 +214,12 @@ def getOccupiedTiles(state):
 def allMoves(state):
 	moveOptions = []
 	i = 0
-	bord = copy.deepcopy(state)
-	bord2 = copy.deepcopy(state)
+
 	occupied = getOccupiedTiles(state)
 
 	for car in CARS_LIST.cars:
-		bord = copy.deepcopy(state)
-		bord2 = copy.deepcopy(state)
+		bord = deepCopyList(state)
+		bord2 = deepCopyList(state)
 
 		if car.isHorizontal and car.length == 2 :
 			if state[i] -1 not in occupied and state[i] not in range(0,36,6): # moet niet op een bezette tegel of buiten het bord belanden
