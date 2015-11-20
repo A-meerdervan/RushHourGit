@@ -55,14 +55,14 @@ def main():
 	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
-	
-	algorithm(INITIAL_STATE)
-	
-	# Print some results
-	print "Algorithm is done"
-	print len(SOLUTION_PATH)
 
-	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, HEIGHT, 0.8)
+	algorithm(INITIAL_STATE)
+
+	#Print some results
+	#print "Algorithm is done"
+	#print len(SOLUTION_PATH)
+
+	#runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, HEIGHT, 0.8)
 
 def algorithm(initialState):
 	queue = []
