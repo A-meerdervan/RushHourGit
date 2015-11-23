@@ -80,7 +80,7 @@ def allMoves(state):
 				moveOptions.append(state)
 				state[i] -= WIDTH
 
-		elif car.isHorizontal and car.length == 3:
+		elif car.isHorizontal and car.length == 3: # truck lengthr
 			if state[i] - 1 not in occupied and state[i] not in  range(0,36,6) :
 				state[i] -= 1
 				moveOptions.append(state)

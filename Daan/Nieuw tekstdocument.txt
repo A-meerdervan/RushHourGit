@@ -1,0 +1,1 @@
+moveoptions meteen toevoegen aan de stack in de plaats van erna ! kan tijd schelen

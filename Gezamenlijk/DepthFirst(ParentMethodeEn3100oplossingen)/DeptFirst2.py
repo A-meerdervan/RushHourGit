@@ -72,7 +72,7 @@ def main():
 	# print SOLUTION_PATHS
 
 
-	# runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
+	runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
 
 def algorithm(initialState):
 	stack = Stack()
