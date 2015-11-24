@@ -297,7 +297,7 @@ def allMoves(state):
 				bord2[i] += HEIGHT
 				moveOptions.append(bord2)
 		i += 1
-	print moveOptions
+	return moveOptions
 
 
 def optionIsSolution(state,occupied):
