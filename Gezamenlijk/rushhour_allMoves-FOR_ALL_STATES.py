@@ -19,6 +19,7 @@ def main():
 	Car6 = Car(33, True, 2)
 	Car7 = Car(20, False, 2)
 	Car8 = Car(23, False, 3)
+	state = [0,7,3,4,16,33,20,23,21] #add red car at last to minimize stack!
 	#game #2
 	RedCar = Car(20, True, 2)
 	Car1 = Car(0, False, 2)
@@ -33,6 +34,7 @@ def main():
 	Car10 = Car(27, True, 2)
 	Car11 = Car(32, True, 2)
 	Car12 = Car(34, True, 2)
+	state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
 	#game #3
 	RedCar = Car(18, True, 2)
 	Car1 = Car(0, False, 2)
@@ -46,7 +48,7 @@ def main():
 	Car9 = Car(27, True, 2)
 	Car10 = Car(32, True, 2)
 	Car11 = Car(34, True, 2)
-
+	state = [0,12,2,10,14,16,17,25,27,32,34,18]
 	#9x9
 	#game #4
 	RedCar = Car(37, True, 2)
@@ -71,6 +73,7 @@ def main():
 	Car15 = Car(73, True, 3)
 	Car16 = Car(59, False, 3)
 	Car17 = Car(69, True, 3)
+	state = [0,1,4,5,7,11,12,17,18,21,27,30,12,44,29,32,34,63,73,59,69,37]
 	#game #5
 	RedCar = Car(42, True, 2)
 	Car1 = Car(0, False, 2)
@@ -96,6 +99,7 @@ def main():
 	Car21 = Car(68, False, 2)
 	Car22 = Car(69, False, 2)
 	Car23 = Car(70, True, 2)
+	state = [0,1,18,2,11,4,14,8,20,21,23,24,26,38,49,51,52,57,58,72,68,69,70,42]
 	#game #6
 	RedCar = Car(36, True, 2)
 	Car1 = Car(0, False, 3)
@@ -123,6 +127,7 @@ def main():
 	Car23 = Car(70, False, 2)
 	Car24 = Car(72,True,2)
 	Car24 = Car(74,True,2)
+	state = [0,1,4,11,14,17,19,20,23,30,31,33,38,49,50,51,54,56,61,64,67,68,70,72,74,36]
 	#12x12 #7
 	RedCar = Car(74, True, 2)
 	Car1 = Car(1, True, 2)
@@ -168,7 +173,8 @@ def main():
 	Car41 = Car(126, False, 2)
 	Car42 = Car(139, True, 3)
 	Car43 = Car(142, True, 2)
-
+	state = [1,3,6,7,9,10,11,26,27,32,35,36,39,42,43,48,51,52,55,57,58,60,64,65,70,72,73,86,
+	89,90,91,103,105,108,111,113,115,118,119,120,126,139,142]
 
 	CARS_LIST.cars.append(Car1)
 	CARS_LIST.cars.append(Car2)
@@ -182,8 +188,39 @@ def main():
 	CARS_LIST.cars.append(Car10)
 	CARS_LIST.cars.append(Car11)
 	CARS_LIST.cars.append(Car12)
+	CARS_LIST.cars.append(Car13)
+	CARS_LIST.cars.append(Car14)
+	CARS_LIST.cars.append(Car15)
+	CARS_LIST.cars.append(Car16)
+	CARS_LIST.cars.append(Car17)
+	CARS_LIST.cars.append(Car18)
+	CARS_LIST.cars.append(Car19)
+	CARS_LIST.cars.append(Car20)
+	CARS_LIST.cars.append(Car21)
+	CARS_LIST.cars.append(Car22)
+	CARS_LIST.cars.append(Car23)
+	CARS_LIST.cars.append(Car24)
+	CARS_LIST.cars.append(Car25)
+	CARS_LIST.cars.append(Car26)
+	CARS_LIST.cars.append(Car27)
+	CARS_LIST.cars.append(Car28)
+	CARS_LIST.cars.append(Car29)
+	CARS_LIST.cars.append(Car30)
+	CARS_LIST.cars.append(Car31)
+	CARS_LIST.cars.append(Car32)
+	CARS_LIST.cars.append(Car33)
+	CARS_LIST.cars.append(Car34)
+	CARS_LIST.cars.append(Car35)
+	CARS_LIST.cars.append(Car36)
+	CARS_LIST.cars.append(Car37)
+	CARS_LIST.cars.append(Car38)
+	CARS_LIST.cars.append(Car39)
+	CARS_LIST.cars.append(Car40)
+	CARS_LIST.cars.append(Car41)
+	CARS_LIST.cars.append(Car42)
+	CARS_LIST.cars.append(Car43)
 	CARS_LIST.cars.append(RedCar)
-	state = [0,12,3,4,10,14,16,17,25,27,32,34,20]
+
 	# Car1 = Car(18,True,2)
 	# Car2 = Car(9,False,2)
 	# CARS_LIST.cars.append(Car2)
