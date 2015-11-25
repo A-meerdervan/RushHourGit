@@ -210,7 +210,6 @@ def getOccupiedTiles(state):
 def allMoves(state):
 	moveOptions = []
 	i = 0
-
 	occupied = getOccupiedTiles(state)
 
 	for car in CARS_LIST.cars:
@@ -218,39 +217,40 @@ def allMoves(state):
 		bord2 = deepCopyList(state)
 
 		if car.isHorizontal and car.length == 2 :
-			if state[i] -1 not in occupied and state[i] not in range(0,36,6): # moet niet op een bezette tegel of buiten het bord belanden
+			if state[i] -1 not in occupied and state[i] not in range(0,WIDTH*WIDTH,WIDTH): # moet niet op een bezette tegel of buiten het bord belanden
 				bord[i] -= 1
 				moveOptions.append(bord)
-			if state[i] + 2 not in occupied and state[i] not in range(4,40,6): # range om te kijken of de positie binnen het bereik van het bord is.
+			if state[i] + 2 not in occupied and state[i] not in  range(WIDTH-2,(WIDTH*WIDTH+WIDTH-2),WIDTH): # range om te kijken of de positie binnen het bereik van het bord is.
 				bord2[i] += 1
 				moveOptions.append(bord2)
 
 		elif not car.isHorizontal and car.length == 2:
-			if state[i] - WIDTH not in occupied  and state[i] not in  range(6):
+			if state[i] - WIDTH not in occupied  and state[i] not in  range(WIDTH):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 12 not in occupied and state[i] not in range(24,30):
+			if state[i] + 12 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 
 		elif car.isHorizontal and car.length == 3:
-			if state[i] - 1 not in occupied and state[i] not in  range(0,36,6) :
+			if state[i] - 1 not in occupied and state[i] not in  range(0,WIDTH*WIDTH,WIDTH) :
 				bord[i] -= 1
 				moveOptions.append(bord)
-			if state[i] + 3 not in occupied and state[i] not in  range(3,39,6):
+			if state[i] + 3 not in occupied and state[i] not in  range(WIDTH-3,WIDTH*WIDTH+WIDTH-3,WIDTH):
 				bord2[i] += 1
 				moveOptions.append(bord2)
 
 		elif not car.isHorizontal and car.length == 3:
-			if state[i] - HEIGHT not in occupied and state[i] not in  range(6):
+			if state[i] - HEIGHT not in occupied and state[i] not in  range(WIDTH):
 				bord[i] -= HEIGHT
 				moveOptions.append(bord)
-			if state[i] + 3*HEIGHT not in occupied and state[i] < 18:
+			if state[i] + 3*HEIGHT not in occupied and state[i] not in range(WIDTH*(WIDTH-3),WIDTH*(WIDTH-2)):
 				bord2[i] += HEIGHT
 				moveOptions.append(bord2)
 		i += 1
 
 	return moveOptions
+
 
 if __name__ == '__main__':
 	main()
