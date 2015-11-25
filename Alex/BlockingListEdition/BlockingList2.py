@@ -23,7 +23,7 @@ EXIT_RIGHT = "| _ "
 EXIT_RIGHT_INT = 104
 EXIT_HEIGHT = 3
 RED_CAR = "| R "
-RED_CAR_INT = 0
+RED_CAR_INT = 5
 FIELD = []
 CARSLIST = []
 
@@ -34,56 +34,122 @@ def run():
 	placeExit("Right", EXIT_HEIGHT)
 
 	# insert cars
-	RedCar = Car([0,3], "Horizontal" , 2, RED_CAR_INT)
-	Car1 = Car([0,5], "Horizontal", 3, 1)
-	Car2 = Car([4,2], "Vertical", 3, 2)
-	Car3 = Car([2,3], "Vertical", 2, 3)
-	Car4 = Car([1,2], "Horizontal", 2, 4)
-	Car5 = Car([3,0], "Horizontal", 2, 5)
+	Car1 = Car([0,5], "Horizontal", 3, 0)
+	Car2 = Car([4,2], "Vertical", 3, 1)
+	Car3 = Car([2,3], "Vertical", 2, 2)
+	Car4 = Car([1,2], "Horizontal", 2, 3)
+	Car5 = Car([3,0], "Horizontal", 2, 4)
+	RedCar = Car([0,3], "Horizontal" , 2, 5)
 
-	CARSLIST.append(RedCar)
+
 	CARSLIST.append(Car1)
 	CARSLIST.append(Car2)
 	CARSLIST.append(Car3)
 	CARSLIST.append(Car4)
 	CARSLIST.append(Car5)
+	CARSLIST.append(RedCar)
 
+	blockingLists = []
 	for car in CARSLIST:
 		placeCar(car)
+		blockingLists.append([ [], [], ])
 
+	RED_CAR_INT = len(CARSLIST) - 1
 	printFieldFlipped()
 
-	# Dit is een zootje bullshit
+	# Algorithme
+	# get block list red car
 	BlokkadeList = getBlokkadeList(RED_CAR_INT, 0)
-	print "BlokkadeList RED_CAR: "
-	print BlokkadeList
-	# Loop the cars in the positive list
-	for CarNumber in BlokkadeList[0][0:-1]:
-		# The y of the Redcar is the height of conflict
-		BlokkadeList1 = getBlokkadeList(CarNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
-		print "Per auto ", CarNumber, ": BlokkadeList: "
-		print BlokkadeList1
-		# If the positive blocking list is empty move 1 in pos direction
-		if BlokkadeList[0][-1] != 0 and len(BlokkadeList[0]) == 1:
-			if canMoveCar(CarNumber, BlokkadeList1[0][-1] ):
-				print "move pos"
-				moveCar(CarNumber, BlokkadeList1[0][-1] )
-		# or if the negative blocking list is empty, move 1 in neg direction
-		elif (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
-			if canMoveCar(CarNumber, BlokkadeList1[1][-1] ):
-				print "move neg"
-				moveCar(CarNumber, BlokkadeList1[1][-1] )
-	# Test voor horizontale auto die een list wil krijgen
-	# Car 1 moet aan de kant voor Car3, die heeft conflict x = 2
-	BlokkadeList = getBlokkadeList(Car1.Number, 2)
-	print "De BlokkadeList van 1 wanneer hij aan de kant moet voor 3 is: "
-	print BlokkadeList
-	# If the positive blocking list is empty move 1 in pos direction
-	if (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
-		print "in if"
-		if canMoveCar(Car1.Number, BlokkadeList[0][-1] ):
-			print "move pos"
-			moveCar(Car1.Number, BlokkadeList[0][-1] )
+	blockingLists[RED_CAR_INT] = BlokkadeList
+
+	# Loop the positive and the negative subLists of the RED car
+	i = 0
+	print "Hierna moet het komen"
+	for subList in BlokkadeList:
+		# if there is no car in the way of the red car this is a SOLUTION
+		if (BlokkadeList[i][-1]) != 0 and len(BlokkadeList[i]) == 1:
+			print "SOLUTIONFOUND!"
+			break
+		# Loop the cars that are in the way of the RED car (2 and 1)
+		for carNumber in subList[:-1]:
+			BlokkadeList = getBlokkadeList(carNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
+			blockingLists[carNumber] = BlokkadeList
+			# Loop pos and negative subLists
+			j = 0
+			for subList in BlokkadeList:
+			# if there is no car in the way of the car
+				print "Carnumber", carNumber
+				if (BlokkadeList[j][-1]) != 0 and len(BlokkadeList[j]) == 1:
+					print "CAR Can be moved! and j = ", j
+					# move car
+					moveCar(carNumber, BlokkadeList[j][-1])
+					# update map by popping something
+					# break so you will not also check the negative list
+					break
+
+				# Loop the cars in the way (0 en 3) the first time, the second time (4)
+				for carNumber1 in subList[:-1]:
+					BlokkadeList = getBlokkadeList(carNumber1, CARSLIST[carNumber].MainCoordinate[0])
+					blockingLists[carNumber1] = BlokkadeList
+					# Loop pos and negative subLists
+					k = 0
+					keepGoing = True
+					for subList in BlokkadeList:
+						if not keepGoing:
+							break
+						else:
+						# if there is no car in the way of the car
+							print "Carnumber1", carNumber1
+							if (BlokkadeList[k][-1]) != 0 and len(BlokkadeList[k]) == 1:
+								print "CAR Can be moved! and j = ", k
+								# move car
+								moveCar(carNumber1, BlokkadeList[k][-1])
+								# update map by popping something
+								keepGoing = False
+								break
+								# notBreak = False
+							print "DE BREAK HEEFT NIET GEWERKT want j is ", j
+							# Loop the cars in the way (0 en 3)
+							for carNumber2 in subList[:-1]:
+								print "niets"
+								print "CarNumber2 ", carNumber2 
+						k += 1
+				j += 1
+		i += 1
+
+
+
+	# # Dit is een zootje bullshit
+	# BlokkadeList = getBlokkadeList(RED_CAR_INT, 0)
+	# print "BlokkadeList RED_CAR: "
+	# print BlokkadeList
+	# # Loop the cars in the positive list
+	# for CarNumber in BlokkadeList[0][0:-1]:
+	# 	# The y of the Redcar is the height of conflict
+	# 	BlokkadeList1 = getBlokkadeList(CarNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
+	# 	print "Per auto ", CarNumber, ": BlokkadeList: "
+	# 	print BlokkadeList1
+	# 	# If the positive blocking list is empty move 1 in pos direction
+	# 	if BlokkadeList[0][-1] != 0 and len(BlokkadeList[0]) == 1:
+	# 		if canMoveCar(CarNumber, BlokkadeList1[0][-1] ):
+	# 			print "move pos"
+	# 			moveCar(CarNumber, BlokkadeList1[0][-1] )
+	# 	# or if the negative blocking list is empty, move 1 in neg direction
+	# 	elif (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
+	# 		if canMoveCar(CarNumber, BlokkadeList1[1][-1] ):
+	# 			print "move neg"
+	# 			moveCar(CarNumber, BlokkadeList1[1][-1] )
+	# # Test voor horizontale auto die een list wil krijgen
+	# # Car 1 moet aan de kant voor Car3, die heeft conflict x = 2
+	# BlokkadeList = getBlokkadeList(Car1.Number, 2)
+	# print "De BlokkadeList van 1 wanneer hij aan de kant moet voor 3 is: "
+	# print BlokkadeList
+	# # If the positive blocking list is empty move 1 in pos direction
+	# if (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
+	# 	print "in if"
+	# 	if canMoveCar(Car1.Number, BlokkadeList[0][-1] ):
+	# 		print "move pos"
+	# 		moveCar(Car1.Number, BlokkadeList[0][-1] )
 
 #	moveCar(Car2.Number, -1)
 #	moveCar(RedCar.Number, -4)
@@ -105,9 +171,9 @@ def getBlokkadeList(Number, ConflictNumber):
 				if Item not in BlokkadeList[i]:
 					BlokkadeList[i].append(Item)
 		# Add the moves needed at the back of the list
-		print "Sub coordinates " , subCoordinates
 		BlokkadeList[i].append(subCoordinates[-1])
 		i += 1
+	print "BlokkadeList van ", Number, BlokkadeList
 	return BlokkadeList
 
 	# This function returns a list of coordinates that have to be free
@@ -137,7 +203,6 @@ def getCoordinatesToFree(Number, ConflictNumber):
 			if (ConflictNumber + car.Length) < HEIGHT:
 				# add the coordinates of where the car could move to
 				for i in range((car.Length + car.MainCoordinate[1] - ConflictNumber), car.Length + 1):
-					print i					
 					y = ConflictNumber + i
 					InPosDirection.append([x,y])
 					movesNeeded += 1
@@ -160,10 +225,10 @@ def getCoordinatesToFree(Number, ConflictNumber):
 		else:
 			y = car.MainCoordinate[1]
 			# Check if moving the car to the right would place it outside the field
-			# print ConflictNumber + car.Length
-			# print WIDTH
+			print ConflictNumber + car.Length
+			print WIDTH
 			if (ConflictNumber + car.Length) < WIDTH:
-				# print "in if"
+				print "in if"
 				# add the coordinates of where the car could move to
 				for i in range(car.Length + car.MainCoordinate[0] - ConflictNumber, car.Length + 1):
 					x = ConflictNumber + i
@@ -188,7 +253,6 @@ def getCoordinatesToFree(Number, ConflictNumber):
 	CoordinatesToFree.append(InPosDirection)
 	CoordinatesToFree.append(InNegDirection)
 
-	print "Coordinates to free van car ", Number, " ", CoordinatesToFree
 	return CoordinatesToFree
 
 def moveCar(Number, Steps):
@@ -296,7 +360,7 @@ def printFieldFlipped():
 				ItemString = EXIT_RIGHT
 			elif Item == RED_CAR_INT:
 				ItemString = RED_CAR
-			elif Item > 0:
+			elif Item >= 0:
 				ItemString = "| " + str(Item) + " "
 			RowString += ItemString
 		print RowString
