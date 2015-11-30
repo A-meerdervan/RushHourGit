@@ -3,11 +3,6 @@
 from copy import deepcopy
 
 from Car import Car
-#from "..\Pim" import rushhour_visualize #" import RushhourVisualisation
-#from "C:\Users\Alex\Documents\Mprog\ProgrammeerTheorie2015\RushHourGit\Pim\rushhour_visualize" import RushhourVisualisation  #RushHourGit.Pim.rushhour_visualize import RushhourVisualisation
-import sys
-#sys.path.insert(0, "C:\Users\daan\Desktop\Nieuwe map\RushHourGit\Pim")
-#from rushhour_visualize import runSimulation #import RushhourVisualisation
 
 
 WIDTH = 6

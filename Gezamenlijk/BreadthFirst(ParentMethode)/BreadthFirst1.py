@@ -240,13 +240,10 @@ def main():
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
 
 	algorithm(INITIAL_STATE)
-<<<<<<< HEAD
 	
 	# Print some results
-=======
 
 	#Print some results
->>>>>>> 7c5e64c796bdc1aa3dc30a0cc37535d59f0a0997
 	#print "Algorithm is done"
 	#print len(SOLUTION_PATH)
 
