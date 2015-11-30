@@ -6,7 +6,6 @@ class Tree(object):
         self.tiles = width-1
         self.root.makeChildren(self.tiles)
         self.carsOrientation = carsOrientation
-        self.adjustedDepth = -1
 
     def encryptState(self, orientation, state):
         encryptedState = []
@@ -17,9 +16,10 @@ class Tree(object):
                 encryptedState.append(state[positions] / self.width)
         return encryptedState
 
-    def addState(self, stateIn, parentState, startDepth = -1):
+    def addState(self, state, parentState):
         self.counter += 1
-        state = self.encryptState(self.carsOrientation, stateIn)
+        # print self.counter
+        state = self.encryptState(self.carsOrientation, state)
         pointer = self.root
         for cars in range(0, len(state)):
             if pointer.children[state[cars]].exist == False:
@@ -28,52 +28,36 @@ class Tree(object):
                 if cars < len(state) - 2:
                     pointer.makeChildren(self.tiles)
                 elif cars < len(state) - 1:
-                    if startDepth == -1:
-                        depthInput = self.goToEndNode(parentState).depth + 1
-                    else:
-                        depthInput = startDepth
-                    pointer.makeEndChildren(self.tiles, depthInput)
+                    pointer.makeEndChildren(self.tiles)
                 else:
                     pointer.setParentState(parentState)
-                    self.goToEndNode(parentState).children.append(pointer)
             else:
                 pointer = pointer.children[state[cars]]
 
-    def checkState(self, stateIn, parentState):
-        state = self.encryptState(self.carsOrientation, stateIn)
+    def checkState(self, state):
+        # print 'self cars orient', self.carsOrientation
+        # print 'state before adaptation', state
+        state = self.encryptState(self.carsOrientation, state)
         pointer = self.root
+        # print 'len state:', len(self.state)
+        # print 'state:', self.state
+        # print 'children len:', len(self.pointer.children)
         for cars in range(0, len(state)):
             if pointer.children[state[cars]].exist == False:
                 return False
             else:
                 pointer = pointer.children[state[cars]]
-
-        newDepth = self.goToEndNode(parentState).depth + 1
-        currentDepth = pointer.depth
-        if currentDepth > newDepth:
-            self.adjustedDepth = newDepth
-            statePointer = self.goToEndNode(stateIn)
-            statePointer.parent = parentState
-            self.adjustDepth(statePointer)
         return True
 
-    def adjustDepth(self, nodePointer):
-        nodePointer.depth = self.adjustedDepth
-        self.adjustedDepth += 1
-        for childs in range(0, len(nodePointer.children)):
-            self.adjustDepth(nodePointer.children[childs])
-        self.adjustedDepth -= 1
-
-    def goToEndNode(self, stateIn):
-        state = self.encryptState(self.carsOrientation, stateIn)
+    def goToEndNode(self, state):
+        state = self.encryptState(self.carsOrientation, state)
         pointer = self.root
         for cars in range(0, len(state)):
-            print len(pointer.children)
             pointer = pointer.children[state[cars]]
         return pointer
 
-    def getParent(self, stateIn):
-        parent = self.goToEndNode(stateIn).parentState
+    def getParent(self, state):
+        parent = self.goToEndNode(state).parentState
         return parent
 
     def lengthArchive(self):
@@ -88,14 +72,15 @@ class Node(object):
         for child in range(0, children):
             self.children.append(Node())
 
-    def makeEndChildren(self, children, parent, depth):
+    def makeEndChildren(self, children):
         for child in range(0, children):
-            self.children.append(EndNode(depth, parent))
+            self.children.append(EndNode())
 
 class EndNode(object):
-    def __init__(self, parent, depth):
+    def __init__(self):
         self.exist = False
         self.children = []
-        self.state = []
-        self.parent = parent
-        self.depth = depth
+        self.parentState = []
+
+    def setParentState(self, parentState):
+        self.parentState = parentState

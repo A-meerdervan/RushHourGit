@@ -18,7 +18,7 @@ class CarsList:
         for cars in self.cars:
             self.directionsList.append(cars.isHorizontal)
         return self.directionsList
-        
+
     def getVisualisationList(self):
         visualisationList = []
         for car in self.cars:

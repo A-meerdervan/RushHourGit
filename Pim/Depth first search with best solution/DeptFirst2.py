@@ -3,9 +3,10 @@ from Stack import Stack
 from CarsList import CarsList
 from tree import Tree
 from Car import Car
-from PathTracker import PathTracker
 import copy
 from rushhour_visualisation import *
+import sys
+
 # this contains the state and it's parent state like:
 # [state, parentState]
 STATES_ARCHIVE = []
@@ -14,20 +15,25 @@ STATES_ARCHIVE = []
 SOLUTIONS = []
 # This contains the path to the solution backwards.
 SOLUTION_PATHS = []
-# This list shrinks and grows, it keeps
-# track where the algorithm is in the possibilities tree
-# it is used to find the path to a solution
-PATH_TRACKER = PathTracker()
 WIDTH = 6
 HEIGHT = 6
 CARS_LIST = CarsList()
 INITIAL_STATE = []
-
+DEPTH_LIMIT = 1000
 
 
 def main():
 
-	# Initialize cars
+	# Car1 = Car(22, False, 3)
+	# Car2 = Car(9, False, 2)
+	# Car3 = Car(10, True, 2)
+	# RedCar = Car(20, True, 2)
+
+	# CARS_LIST.cars.append(Car1)
+	# CARS_LIST.cars.append(Car2)
+	# CARS_LIST.cars.append(Car3)
+	# CARS_LIST.cars.append(RedCar)
+
 	RedCar = Car(20, True, 2)
 	Car1 = Car(0, False, 2)
 	Car2 = Car(12, True, 2)
@@ -60,81 +66,72 @@ def main():
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
 	algorithm(INITIAL_STATE)
-
-	print "Algorithm is done"
-	path1 = SOLUTION_PATHS[-1]
-	print len(SOLUTION_PATHS)
-	#print
-	#for solution in SOLUTION_PATHS:
-		#print len(solution)
+	path1 = SOLUTION_PATHS[0]
 
 	# print results
 	# print "length solutions ", len(SOLUTIONS)
-	# print SOLUTIONS
-	# print SOLUTION_PATHS
-	# print "START"
-	# for i in range(0, 3100, 30):
-	# 	print len(SOLUTION_PATHS[i])
+	#rint SOLUTIONS
+	print len(SOLUTION_PATHS)
+	listSolutionsPaths = []
+	for sols in SOLUTION_PATHS:
+		listSolutionsPaths.append(len(sols))
+	print listSolutionsPaths
 
-	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, HEIGHT, 0.2)
+	pathDepth = []
+	for state in path1[:-1]:
+		print len(state), state
+		pathDepth.append(STATES_ARCHIVE.goToEndNode(state).depth)
+	print pathDepth
+	#runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
+
+def findDuplicates(list):
+	checkList = []
+	for item in list:
+		if item in checkList:
+			return True
+		checkList.append(item)
+	return False
 
 def algorithm(initialState):
 	stack = Stack()
+	DEPTH_LIMIT = 1000
 	# add first state
 	stack.push(initialState)
-	STATES_ARCHIVE.addState(initialState, initialState)
-	MaxDepth = 100000
+	STATES_ARCHIVE.addState(initialState, initialState, 1)
 	# loop all possible moves
+	count = 0
 	while stack.isNotEmpty():
 		option = stack.pop();
-		if len(PATH_TRACKER.path) >= MaxDepth:
-			PATH_TRACKER.decreaseChildCount()
-			PATH_TRACKER.goUpInTreeIfNeeded()
+		if STATES_ARCHIVE.goToEndNode(option).depth > DEPTH_LIMIT:
 			continue
-		allOptions = allMoves(option)
-		PATH_TRACKER.push( option, len(allOptions) )
-
 		# Loop all options and (conditionaly) store them on the stack to revisit later
-		for newOption in allOptions:
+		for newOption in allMoves(option):
 			# Stop the loop if option is a repeat or the solution
-			if optionIsNotNew(newOption):
-				# decrease child count with one
-				PATH_TRACKER.decreaseChildCount()
+			if optionIsNotNew(newOption, option):
 				continue
 			elif optionIsSolution(newOption):
 				SOLUTIONS.append([newOption, option])
-				SOLUTION_PATHS.append(deepCopyList(PATH_TRACKER.path))
-				SOLUTION_PATHS[-1].append(newOption)
-				# decrease child count with one
-				PATH_TRACKER.decreaseChildCount()
-				#print "max dept wanneer oplossing is gevonden", MaxDepth
-				#print "length path", len(PATH_TRACKER.path)
-				# When a shorter solution is found the max depth of the search is set to that length
-				MaxDepth = len(PATH_TRACKER.path) - 1
-				# This will break the for loop so that solutions with equal length
-				# are not evaluated
-				break
+				DEPTH_LIMIT = STATES_ARCHIVE.goToEndNode(option).depth
+				print(DEPTH_LIMIT)
+				#getSolutionPaths()
+				continue
+
 			else:
+				count += 1
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
 				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
-		# If this node has no children go up as many levels as needed
-		PATH_TRACKER.goUpInTreeIfNeeded()
-	#getSolutionPaths()
-
-def deepCopyList(list):
-	copiedList = []
-	# for item in list:
-	# 	copiedList.append(item)
-	copiedList = list[::]
-	return copiedList
+			#if count == 150:
+				#rint "Stack : ", stack.items
+	# print "Stack : ", stack.items
+	getSolutionPaths()
 
 def getSolutionPaths():
-	# count = 0
+	count = 0
 	for solution in SOLUTIONS:
-		# if count == 10:
-		# 	break
+		#if count == 10:
+		#	break
 		path = [solution[0]]
 		parent = solution[1]
 		notAtRoot = True
@@ -152,11 +149,11 @@ def getSolutionPaths():
 			parent = parentOfParrent
 		# print path
 		SOLUTION_PATHS.append(path)
-		# count += 1
+		count += 1
 
-def optionIsNotNew(option):
+def optionIsNotNew(newOption, option):
 	# check tree for state
-	return STATES_ARCHIVE.checkState(option)
+	return STATES_ARCHIVE.checkState(newOption, option)
 
 # def optionIsSolution(option):
 # 	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
@@ -206,6 +203,13 @@ def getOccupiedTiles(state):
 			occupied.append(state[k]+HEIGHT*2)
 		k += 1
 	return occupied
+
+def deepCopyList(list):
+	copiedList = []
+	# for item in list:
+	# 	copiedList.append(item)
+	copiedList = list[::]
+	return copiedList
 
 def allMoves(state):
 	moveOptions = []
