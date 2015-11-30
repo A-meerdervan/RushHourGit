@@ -18,7 +18,6 @@ class Tree(object):
 
     def addState(self, state, parentState):
         self.counter += 1
-        print self.counter
         self.state = self.encryptState(self.carsOrientation, state)
         self.pointer = self.root
         for cars in range(0, len(self.state)):
