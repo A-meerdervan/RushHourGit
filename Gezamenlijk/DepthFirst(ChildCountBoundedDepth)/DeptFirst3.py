@@ -4,6 +4,7 @@ from CarsList import CarsList
 from tree import Tree
 from Car import Car
 from PathTracker import PathTracker
+from allBords import *
 import copy
 from rushhour_visualisation import *
 # this contains the state and it's parent state like:
@@ -19,43 +20,17 @@ SOLUTION_PATHS = []
 # it is used to find the path to a solution
 PATH_TRACKER = PathTracker()
 WIDTH = 6
-HEIGHT = 6
 CARS_LIST = CarsList()
 INITIAL_STATE = []
+EXIT = 0
 
 
 
 def main():
-
-	# Initialize cars
-	RedCar = Car(20, True, 2)
-	Car1 = Car(0, False, 2)
-	Car2 = Car(12, True, 2)
-	Car3 = Car(3, False, 2)
-	Car4 = Car(4, True, 2)
-	Car5 = Car(10, True, 2)
-	Car6 = Car(14, True, 2)
-	Car7 = Car(16, False, 2)
-	Car8 = Car(17, False, 3)
-	Car9 = Car(25, True, 2)
-	Car10 = Car(27, True, 2)
-	Car11 = Car(32, True, 2)
-	Car12 = Car(34, True, 2)
-
-	CARS_LIST.cars.append(Car1)
-	CARS_LIST.cars.append(Car2)
-	CARS_LIST.cars.append(Car3)
-	CARS_LIST.cars.append(Car4)
-	CARS_LIST.cars.append(Car5)
-	CARS_LIST.cars.append(Car6)
-	CARS_LIST.cars.append(Car7)
-	CARS_LIST.cars.append(Car8)
-	CARS_LIST.cars.append(Car9)
-	CARS_LIST.cars.append(Car10)
-	CARS_LIST.cars.append(Car11)
-	CARS_LIST.cars.append(Car12)
-	CARS_LIST.cars.append(RedCar)
-
+	bordVariables = bord(5) # return [carsList,width,exit]
+	global WIDTH; WIDTH = bordVariables[1]
+	global EXIT; EXIT = bordVariables[2]
+	global CARS_LIST; CARS_LIST = bordVariables[0]
 	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
@@ -76,14 +51,14 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, HEIGHT, 0.2)
+	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
 	stack = Stack()
 	# add first state
 	stack.push(initialState)
 	STATES_ARCHIVE.addState(initialState, initialState)
-	MaxDepth = 100000
+	MaxDepth = 100
 	# loop all possible moves
 	while stack.isNotEmpty():
 		option = stack.pop();
@@ -113,6 +88,7 @@ def algorithm(initialState):
 				MaxDepth = len(PATH_TRACKER.path) - 1
 				# This will break the for loop so that solutions with equal length
 				# are not evaluated
+				return
 				break
 			else:
 				# add the option to the stack for later evaluation
@@ -169,7 +145,6 @@ def optionIsSolution(state):
 	#checkt nog te veel maar Alex zeurt
 	occupied = getOccupiedTiles(state)
 	arraycounter =[]
-	EXIT = 22
 	counter = 1
 	while state[-1] < EXIT:
 		counter += 1
@@ -202,8 +177,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
-			occupied.append(state[k]+HEIGHT)
-			occupied.append(state[k]+HEIGHT*2)
+			occupied.append(state[k]+WIDTH)
+			occupied.append(state[k]+WIDTH*2)
 		k += 1
 	return occupied
 
@@ -241,11 +216,11 @@ def allMoves(state):
 				moveOptions.append(bord2)
 
 		elif not car.isHorizontal and car.length == 3:
-			if state[i] - HEIGHT not in occupied and state[i] not in  range(WIDTH):
-				bord[i] -= HEIGHT
+			if state[i] - WIDTH not in occupied and state[i] not in  range(WIDTH):
+				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 3*HEIGHT not in occupied and state[i] not in range(WIDTH*(WIDTH-3),WIDTH*(WIDTH-2)):
-				bord2[i] += HEIGHT
+			if state[i] + 3*WIDTH not in occupied and state[i] not in range(WIDTH*(WIDTH-3),WIDTH*(WIDTH-2)):
+				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 		i += 1
 

@@ -4,6 +4,7 @@ from CarsList import CarsList
 from tree import Tree
 from Car import Car
 import copy
+from allBords import *
 from rushhour_visualisation import *
 # this contains the state and it's parent state like:
 # [state, parentState]
@@ -14,51 +15,16 @@ SOLUTIONS = []
 # This contains the path to the solution backwards.
 SOLUTION_PATHS = []
 WIDTH = 6
-HEIGHT = 6
 CARS_LIST = CarsList()
 INITIAL_STATE = []
 
 
 
 def main():
-
-	# Car1 = Car(22, False, 3)
-	# Car2 = Car(9, False, 2)
-	# Car3 = Car(10, True, 2)
-	# RedCar = Car(20, True, 2)
-
-	# CARS_LIST.cars.append(Car1)
-	# CARS_LIST.cars.append(Car2)
-	# CARS_LIST.cars.append(Car3)
-	# CARS_LIST.cars.append(RedCar)
-
-	RedCar = Car(20, True, 2)
-	Car1 = Car(0, False, 2)
-	Car2 = Car(12, True, 2)
-	Car3 = Car(3, False, 2)
-	Car4 = Car(4, True, 2)
-	Car5 = Car(10, True, 2)
-	Car6 = Car(14, True, 2)
-	Car7 = Car(16, False, 2)
-	Car8 = Car(17, False, 3)
-	Car9 = Car(25, True, 2)
-	Car10 = Car(27, True, 2)
-	Car11 = Car(32, True, 2)
-	Car12 = Car(34, True, 2)
-
-	CARS_LIST.cars.append(Car1)
-	CARS_LIST.cars.append(Car2)
-	CARS_LIST.cars.append(Car3)
-	CARS_LIST.cars.append(Car4)
-	CARS_LIST.cars.append(Car5)
-	CARS_LIST.cars.append(Car6)
-	CARS_LIST.cars.append(Car7)
-	CARS_LIST.cars.append(Car8)
-	CARS_LIST.cars.append(Car9)
-	CARS_LIST.cars.append(Car10)
-	CARS_LIST.cars.append(Car11)
-	CARS_LIST.cars.append(Car12)
-	CARS_LIST.cars.append(RedCar)
+	bordVariables = bord(5) # return [carsList,width,exit]
+	global WIDTH; WIDTH = bordVariables[1]
+	global EXIT; EXIT = bordVariables[2]
+	global CARS_LIST; CARS_LIST = bordVariables[0]
 
 	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
@@ -72,7 +38,7 @@ def main():
 	# print SOLUTION_PATHS
 
 
-	runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, HEIGHT, 0.2)
+	runSimulation(CARS_LIST.getVisualisationList(), path1[::-1], WIDTH, WIDTH, 0.2)
 
 def algorithm(initialState):
 	stack = Stack()
@@ -103,7 +69,12 @@ def algorithm(initialState):
 				#rint "Stack : ", stack.items
 	# print "Stack : ", stack.items
 	getSolutionPaths()
-
+def deepCopyList(list):
+	copiedList = []
+	# for item in list:
+	# 	copiedList.append(item)
+	copiedList = list[::]
+	return copiedList
 def getSolutionPaths():
 	count = 0
 	for solution in SOLUTIONS:
@@ -143,7 +114,6 @@ def optionIsSolution(state):
 	#checkt nog te veel maar Alex zeurt
 	occupied = getOccupiedTiles(state)
 	arraycounter =[]
-	EXIT = 22
 	counter = 1
 	while state[-1] < EXIT:
 		counter += 1
@@ -176,8 +146,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
-			occupied.append(state[k]+HEIGHT)
-			occupied.append(state[k]+HEIGHT*2)
+			occupied.append(state[k]+WIDTH)
+			occupied.append(state[k]+WIDTH*2)
 		k += 1
 	return occupied
 
@@ -215,11 +185,11 @@ def allMoves(state):
 				moveOptions.append(bord2)
 
 		elif not car.isHorizontal and car.length == 3:
-			if state[i] - HEIGHT not in occupied and state[i] not in  range(WIDTH):
-				bord[i] -= HEIGHT
+			if state[i] - WIDTH not in occupied and state[i] not in  range(WIDTH):
+				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 3*HEIGHT not in occupied and state[i] not in range(WIDTH*(WIDTH-3),WIDTH*(WIDTH-2)):
-				bord2[i] += HEIGHT
+			if state[i] + 3*WIDTH not in occupied and state[i] not in range(WIDTH*(WIDTH-3),WIDTH*(WIDTH-2)):
+				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 		i += 1
 
