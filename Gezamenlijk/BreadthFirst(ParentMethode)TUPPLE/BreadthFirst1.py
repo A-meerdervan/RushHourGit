@@ -21,19 +21,18 @@ CARS_LIST = CarsList()
 
 
 def main():
-	bordVariables = bord(5) # return [carsList,width,exit]
+	bordVariables = bord(6) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = dict()
-	
 	algorithm(INITIAL_STATE)
 	#Print some results
 	#print "Algorithm is done"
 	#print len(SOLUTION_PATH)
 
-	# runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.8)
+	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.5)
 
 def algorithm(initialState):
 	queue = []
@@ -111,6 +110,9 @@ def optionIsNotNew(option):
 	return (tuppleOption in STATES_ARCHIVE)
 
 def optionIsSolution(state):
+	# if state[-1] == 36:
+	# 	return True
+	# return False TESTEN!!
 	occupied = getOccupiedTiles(state)
 	arraycounter =[]
 	counter = 1
@@ -140,8 +142,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and horizontal:
 		elif car.isHorizontal and car.length == 3:
 			occupied.append(state[k])
-			occupied.append(state[k]+WIDTH)
-			occupied.append(state[k]+WIDTH*2)
+			occupied.append(state[k]+1)
+			occupied.append(state[k]+2)
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
@@ -171,7 +173,7 @@ def allMoves(state):
 			if state[i] - WIDTH not in occupied  and state[i] not in  range(WIDTH):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 12 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
+			if state[i] + 2*WIDTH not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 

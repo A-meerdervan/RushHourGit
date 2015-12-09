@@ -124,8 +124,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and horizontal:
 		elif car.isHorizontal and car.length == 3:
 			occupied.append(state[k])
-			occupied.append(state[k]+WIDTH)
-			occupied.append(state[k]+WIDTH*2)
+			occupied.append(state[k]+1)
+			occupied.append(state[k]+2)
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
@@ -155,7 +155,7 @@ def allMoves(state):
 			if state[i] - WIDTH not in occupied  and state[i] not in  range(WIDTH):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 12 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
+			if state[i] + WIDTH*2 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 

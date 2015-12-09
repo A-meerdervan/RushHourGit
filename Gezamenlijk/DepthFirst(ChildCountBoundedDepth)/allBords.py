@@ -95,17 +95,17 @@ def bord(level):
         Car7 = Car(12, False, 2)
         Car8 = Car(17, False, 3)
         Car9 = Car(18, True, 2)
-        Car10 = Car(21, True, 2)
+        Car10 = Car(22, True, 2)
         Car11 = Car(27, False, 2)
-        Car12 = Car(30, False, 2)
-        Car13 = Car(12, True, 3)
+        Car12 = Car(45, True, 2)
+        Car13 = Car(48, False, 3)
         Car14 = Car(44, False, 3)
-        Car15 = Car(29, True, 2)
-        Car16 = Car(32, False, 3)
-        Car17 = Car(34, True, 3)
+        Car15 = Car(30, False, 2)
+        Car16 = Car(59, False, 3)
+        Car17 = Car(32, True, 3)
         Car18 = Car(63, False, 2)
         Car19 = Car(73, True, 3)
-        Car20 = Car(59, False, 3)
+        Car20 = Car(50, True, 3)
         Car21 = Car(69, True, 3)
         carsList.cars.append(Car1)
         carsList.cars.append(Car2)
@@ -210,7 +210,7 @@ def bord(level):
         Car22 = Car(68,True, 2)
         Car23 = Car(70, False, 2)
         Car24 = Car(72,True,2)
-        Car24 = Car(74,True,2)
+        Car25 = Car(74,True,2)
         carsList.cars.append(Car1)
         carsList.cars.append(Car2)
         carsList.cars.append(Car3)
@@ -235,6 +235,7 @@ def bord(level):
         carsList.cars.append(Car22)
         carsList.cars.append(Car23)
         carsList.cars.append(Car24)
+        carsList.cars.append(Car25)
         carsList.cars.append(RedCar)
         return [carsList,width,exit]
     elif level == 7:
@@ -328,5 +329,21 @@ def bord(level):
         carsList.cars.append(Car42)
         carsList.cars.append(Car43)
         carsList.cars.append(RedCar)
+    elif level == 8:
+        width = 9
+        exit = 43
+        RedCar = Car(40, True, 2)
+
+        Car4 = Car(7, False, 2)
+        Car2 = Car(61,False,3)
+        Car3 = Car(25, False, 3)
+
+        Car1 = Car(36,False,3)
+        carsList.cars.append(Car1)
+        carsList.cars.append(Car2)
+        carsList.cars.append(Car3)
+        #carsList.cars.append(Car4)
+        carsList.cars.append(RedCar)
+        return [carsList,width,exit]
     return [carsList,width,exit]
 #print bord(2)
