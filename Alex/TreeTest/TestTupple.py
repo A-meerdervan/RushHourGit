@@ -18,32 +18,33 @@ def main():
 	global WIDTH; WIDTH = bordVariables[1]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
-	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
+	global STATES_ARCHIVE; STATES_ARCHIVE = dict()
 
 	aantalCars = len(CARS_LIST.cars)
 	# voeg vaak een state toe aan de tree
 	for i in range(0, 100000):
 		randomState = []
+		randomStateTupple = ()
 		for j in range(0, aantalCars):
 			randomState.append(randint(0,WIDTH-2)*WIDTH + randint(0,WIDTH - 2))
-
+			randomStateTupple = randomStateTupple + (randint(0,WIDTH-2)*WIDTH + randint(0,WIDTH - 2) , )
 		# print randomState
+		STATES_ARCHIVE[randomStateTupple] = [randomState, INITIAL_STATE]
 
-		STATES_ARCHIVE.addState(randomState, INITIAL_STATE)
 	print "ik ben klaar met states toevoegen"
-	
-	# # zoek een state in de tree
-	# for i in range(0, 100000):
-	# 	randomState = []
-	# 	for j in range(0, aantalCars):
-	# 		randomState.append(randint(0,WIDTH-2)*WIDTH + randint(0,WIDTH - 2))
-	# 	STATES_ARCHIVE.checkState(randomState)
-	# print "klaar met states checken"
+
+	# zoek een state in de tree
+	for i in range(0, 100000):
+		randomStateTupple = ()
+		for j in range(0, aantalCars):
+			randomStateTupple = randomStateTupple + (randint(0,WIDTH-2)*WIDTH + randint(0,WIDTH - 2) , )
+		checkState(randomStateTupple)
+	print "klaar met states checken"
 
 
-
-	STATES_ARCHIVE.addState(INITIAL_STATE, INITIAL_STATE)
-
+def checkState(state):
+	# check if key in dictionairy
+	return state in STATES_ARCHIVE
 
 
 
