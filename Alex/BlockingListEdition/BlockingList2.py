@@ -18,9 +18,10 @@ EXIT_RIGHT = "| _ "
 EXIT_RIGHT_INT = 104
 EXIT_HEIGHT = 3
 RED_CAR = "| R "
-RED_CAR_INT = 5
+RED_CAR_INT = 6
 FIELD = []
 CARSLIST = []
+BLOCKERS_INFO = dict()
 
 
 def run():
@@ -29,12 +30,13 @@ def run():
 	placeExit("Right", EXIT_HEIGHT)
 
 	# insert cars
-	Car1 = Car([0,5], "Horizontal", 3, 0)
+	Car1 = Car([0,5], "Horizontal", 5, 0)
 	Car2 = Car([4,2], "Vertical", 3, 1)
 	Car3 = Car([2,3], "Vertical", 2, 2)
 	Car4 = Car([1,2], "Horizontal", 2, 3)
 	Car5 = Car([3,0], "Horizontal", 2, 4)
-	RedCar = Car([0,3], "Horizontal" , 2, 5)
+	Car6 = Car([0,0], "Vertical", 3, 5)
+	RedCar = Car([0,3], "Horizontal" , 2, 6)
 
 
 	CARSLIST.append(Car1)
@@ -42,6 +44,7 @@ def run():
 	CARSLIST.append(Car3)
 	CARSLIST.append(Car4)
 	CARSLIST.append(Car5)
+	CARSLIST.append(Car6)
 	CARSLIST.append(RedCar)
 
 	blockingLists = []
@@ -52,6 +55,71 @@ def run():
 	RED_CAR_INT = len(CARSLIST) - 1
 	printFieldFlipped()
 
+
+
+	# # Algorithme
+	# # get block list red car
+	# BlokkadeList = getBlokkadeList(RED_CAR_INT, 0)
+	# blockingLists[RED_CAR_INT] = BlokkadeList
+
+	# # Loop the positive and the negative subLists of the RED car
+	# i = 0
+	# print "Hierna moet het komen"
+	# keepGoing = True
+	# for subList in BlokkadeList:
+	# 	# if there is no car in the way of the red car this is a SOLUTION
+	# 	if (BlokkadeList[i][-1]) != 0 and len(BlokkadeList[i]) == 1:
+	# 		print "SOLUTIONFOUND!"
+	# 		break
+	# 	# Loop the cars that are in the way of the RED car (2 and 1)
+	# 	for carNumber in subList[:-1]:
+	# 		BlokkadeList = getBlokkadeList(carNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
+	# 		blockingLists[carNumber] = BlokkadeList
+	# 		# Loop pos and negative subLists
+	# 		j = 0
+	# 		for subList in BlokkadeList:
+	# 			if not keepGoing:
+	# 				break
+	# 			else:
+	# 				# if there is no car in the way of the car
+	# 				print "Carnumber", carNumber
+	# 				if (BlokkadeList[j][-1]) != 0 and len(BlokkadeList[j]) == 1:
+	# 					print "CAR Can be moved! and j = ", j
+	# 					# move car
+	# 					moveCar(carNumber, BlokkadeList[j][-1])
+	# 					# update map by popping something
+	# 					# break so you will not also check the negative list
+	# 					break
+
+	# 				# Loop the cars in the way (0 en 3), dus eerst 0, the first time, the second time (4)
+	# 				for carNumber1 in subList[:-1]:
+	# 					BlokkadeList = getBlokkadeList(carNumber1, CARSLIST[carNumber].MainCoordinate[0])
+	# 					blockingLists[carNumber1] = BlokkadeList
+	# 					# Loop pos and negative subLists
+	# 					k = 0
+	# 					for subList in BlokkadeList:
+	# 						if not keepGoing:
+	# 							break
+	# 						else:
+	# 						# if there is no car in the way of the car
+	# 							print "Carnumber1", carNumber1
+	# 							if (BlokkadeList[k][-1]) != 0 and len(BlokkadeList[k]) == 1:
+	# 								print "CAR Can be moved! and j = ", k
+	# 								# move car
+	# 								moveCar(carNumber1, BlokkadeList[k][-1])
+	# 								# update map by popping something
+	# 								keepGoing = False
+	# 								break
+	# 								# notBreak = False
+	# 							print "DE BREAK HEEFT NIET GEWERKT want j is ", j
+	# 							# Loop the cars in the way (0 en 3)
+	# 							for carNumber2 in subList[:-1]:
+	# 								print "niets"
+	# 								print "CarNumber2 ", carNumber2 
+	# 						k += 1
+	# 			j += 1
+	# 	i += 1
+
 	# Algorithme
 	# get block list red car
 	BlokkadeList = getBlokkadeList(RED_CAR_INT, 0)
@@ -61,93 +129,114 @@ def run():
 	i = 0
 	print "Hierna moet het komen"
 	for subList in BlokkadeList:
-		# if there is no car in the way of the red car this is a SOLUTION
-		if (BlokkadeList[i][-1]) != 0 and len(BlokkadeList[i]) == 1:
-			print "SOLUTIONFOUND!"
-			break
 		# Loop the cars that are in the way of the RED car (2 and 1)
 		for carNumber in subList[:-1]:
-			BlokkadeList = getBlokkadeList(carNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
-			blockingLists[carNumber] = BlokkadeList
-			# Loop pos and negative subLists
-			j = 0
-			for subList in BlokkadeList:
-			# if there is no car in the way of the car
-				print "Carnumber", carNumber
-				if (BlokkadeList[j][-1]) != 0 and len(BlokkadeList[j]) == 1:
-					print "CAR Can be moved! and j = ", j
-					# move car
-					moveCar(carNumber, BlokkadeList[j][-1])
-					# update map by popping something
-					# break so you will not also check the negative list
-					break
-
-				# Loop the cars in the way (0 en 3) the first time, the second time (4)
-				for carNumber1 in subList[:-1]:
-					BlokkadeList = getBlokkadeList(carNumber1, CARSLIST[carNumber].MainCoordinate[0])
-					blockingLists[carNumber1] = BlokkadeList
-					# Loop pos and negative subLists
-					k = 0
-					keepGoing = True
-					for subList in BlokkadeList:
-						if not keepGoing:
-							break
-						else:
-						# if there is no car in the way of the car
-							print "Carnumber1", carNumber1
-							if (BlokkadeList[k][-1]) != 0 and len(BlokkadeList[k]) == 1:
-								print "CAR Can be moved! and j = ", k
-								# move car
-								moveCar(carNumber1, BlokkadeList[k][-1])
-								# update map by popping something
-								keepGoing = False
-								break
-								# notBreak = False
-							print "DE BREAK HEEFT NIET GEWERKT want j is ", j
-							# Loop the cars in the way (0 en 3)
-							for carNumber2 in subList[:-1]:
-								print "niets"
-								print "CarNumber2 ", carNumber2 
-						k += 1
-				j += 1
-		i += 1
+			# initiate the global blockers info that will be set by the recursive funciton
+			BLOCKERS_INFO[carNumber] = dict(steps = 0, noLoop = True)
+			# the red car should be added for when it is checked, it means there was a loop
+			recursiveCheck([RED_CAR_INT], carNumber, carNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1], 0)
 
 
+	print BLOCKERS_INFO
+	"""
+	// [ tempSteps, steps, noLoop]
+	append [0, 0, True]
 
-	# # Dit is een zootje bullshit
-	# BlokkadeList = getBlokkadeList(RED_CAR_INT, 0)
-	# print "BlokkadeList RED_CAR: "
-	# print BlokkadeList
-	# # Loop the cars in the positive list
-	# for CarNumber in BlokkadeList[0][0:-1]:
-	# 	# The y of the Redcar is the height of conflict
-	# 	BlokkadeList1 = getBlokkadeList(CarNumber, CARSLIST[RED_CAR_INT].MainCoordinate[1])
-	# 	print "Per auto ", CarNumber, ": BlokkadeList: "
-	# 	print BlokkadeList1
-	# 	# If the positive blocking list is empty move 1 in pos direction
-	# 	if BlokkadeList[0][-1] != 0 and len(BlokkadeList[0]) == 1:
-	# 		if canMoveCar(CarNumber, BlokkadeList1[0][-1] ):
-	# 			print "move pos"
-	# 			moveCar(CarNumber, BlokkadeList1[0][-1] )
-	# 	# or if the negative blocking list is empty, move 1 in neg direction
-	# 	elif (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
-	# 		if canMoveCar(CarNumber, BlokkadeList1[1][-1] ):
-	# 			print "move neg"
-	# 			moveCar(CarNumber, BlokkadeList1[1][-1] )
-	# # Test voor horizontale auto die een list wil krijgen
-	# # Car 1 moet aan de kant voor Car3, die heeft conflict x = 2
-	# BlokkadeList = getBlokkadeList(Car1.Number, 2)
-	# print "De BlokkadeList van 1 wanneer hij aan de kant moet voor 3 is: "
-	# print BlokkadeList
-	# # If the positive blocking list is empty move 1 in pos direction
-	# if (BlokkadeList[0][-1]) != 0 and len(BlokkadeList[0]) == 1:
-	# 	print "in if"
-	# 	if canMoveCar(Car1.Number, BlokkadeList[0][-1] ):
-	# 		print "move pos"
-	# 		moveCar(Car1.Number, BlokkadeList[0][-1] )
+	carsChecked = deepCopyList(carsCheckedParrent).append(ownCarNumber)
 
-#	moveCar(Car2.Number, -1)
-#	moveCar(RedCar.Number, -4)
+	// if the Own carNumber is in carsChecked there was a loop
+	if carNumber in carsChecked:
+		// if no update was done before, update
+		if (steps == 0):
+			// A loop was found
+			noLoop = False
+			steps = tempSteps
+			return 
+		// If there already was a loop and this reaches it sooner, update
+		if (noLoop == False and (tempSteps < steps)):
+			steps = tempSteps
+			return
+		// If there was an update of a free path: do nothing
+
+	// if the way is free maybe update, if better then previous update
+	if (BlokkadeList[j][-1]) != 0 and len(BlokkadeList[j]) == 1:
+		// if no update was done before, update
+		if (steps == 0):
+			steps = tempSteps
+			return 
+		// if there was a loop, free path is better so update
+		if (noLoop == False):
+			steps = tempSteps
+			noLoop = True
+			return
+		// if there was a previous update of a free path, check if this is shorter
+		if (tempSteps < steps):
+			steps = tempSteps
+			return
+
+
+	recursiveCheck(carsCecked, carNumberTop)
+
+
+	"""
+def recursiveCheck(carsCheckedParrent, carNumberTop, ownCarNumber, conflictNumber, tempStepsParent):
+	print carNumberTop, ownCarNumber, carsCheckedParrent, conflictNumber	
+	carsChecked = deepCopyList(carsCheckedParrent)
+	carsChecked.append(ownCarNumber)
+	print carsChecked
+	BlokkadeList = getBlokkadeList(ownCarNumber, conflictNumber)
+	# Loop pos and negative subLists
+	for subList in BlokkadeList:
+		tempSteps = tempStepsParent + abs(subList[-1])
+		# if the way is free, update if better then before
+		if (subList[-1] != 0) and (len(subList) == 1):
+			print "CAR Can possibly be moved! carNumber = ", ownCarNumber
+			# if no update was done before, update
+			if (BLOCKERS_INFO[carNumberTop]["steps"] == 0):
+				BLOCKERS_INFO[carNumberTop]["steps"] = tempSteps
+				return 
+			# if there was a loop, free path is better so update
+			if (BLOCKERS_INFO[carNumberTop]["noLoop"] == False):
+				BLOCKERS_INFO[carNumberTop]["steps"] = tempSteps
+				noLoop = True
+				return
+			# if there was a previous update of a free path, check if this is shorter
+			if (tempSteps < BLOCKERS_INFO[carNumberTop]["steps"]):
+				BLOCKERS_INFO[carNumberTop]["steps"] = tempSteps
+				return
+			# update was not an improvement but quit this branch
+			print "update was niet beter"
+
+			return
+			# # This is optional, it might increase the speed of the program
+			# # break so you will not also check the negative list
+			# break
+		# Loop the cars in the way
+		for carNumber in subList[:-1]:
+			# if the carNumber is in carsChecked there was a loop
+			if carNumber in carsChecked:
+				print "loop was found"
+				# if no update was done before, update
+				if (BLOCKERS_INFO[carNumberTop]["steps"] == 0):
+					# A loop was found
+					BLOCKERS_INFO[carNumberTop]["noLoop"] = False
+					BLOCKERS_INFO[carNumberTop]["steps"] = tempSteps
+					return 
+				# If there already was a loop and this reaches it sooner, update
+				if (BLOCKERS_INFO[carNumberTop]["noLoop"] == False and (tempSteps < BLOCKERS_INFO[carNumberTop][steps])):
+					BLOCKERS_INFO[carNumberTop]["steps"] = tempSteps
+					return
+				# If there was an update of a free path: do nothing
+				print "loop update was geen verbetering"
+				return
+			# the direction of the car decides whether the conflict is in y or x
+			if CARSLIST[ownCarNumber].Direction == "Horizontal":
+				conflictNumber = CARSLIST[ownCarNumber].MainCoordinate[1]
+			else:	conflictNumber = CARSLIST[ownCarNumber].MainCoordinate[0]
+			# Recursively checkout the next car
+			
+			recursiveCheck(carsChecked, carNumberTop, carNumber, conflictNumber, tempSteps)
+	
 
 
 	# This function returns the a list of car numbers that block the path
@@ -202,7 +291,7 @@ def getCoordinatesToFree(Number, ConflictNumber):
 					InPosDirection.append([x,y])
 					movesNeeded += 1
 			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way
+			# before the car moves out of the way( if it cannot move this is 0)
 			InPosDirection.append(movesNeeded)
 			movesNeeded = 0
 			# Check if moving the car down, would place it outside the field
@@ -213,24 +302,21 @@ def getCoordinatesToFree(Number, ConflictNumber):
 					InNegDirection.append([x,y])
 					movesNeeded -= 1
 			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way
+			# before the car moves out of the way( if it cannot move this is 0)
 			InNegDirection.append(movesNeeded)
 		
 		#car.Direction == "Horizontal"
 		else:
 			y = car.MainCoordinate[1]
 			# Check if moving the car to the right would place it outside the field
-			print ConflictNumber + car.Length
-			print WIDTH
 			if (ConflictNumber + car.Length) < WIDTH:
-				print "in if"
 				# add the coordinates of where the car could move to
 				for i in range(car.Length + car.MainCoordinate[0] - ConflictNumber, car.Length + 1):
 					x = ConflictNumber + i
 					InPosDirection.append([x,y])
 					movesNeeded += 1
 			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way
+			# before the car moves out of the way( if it cannot move this is 0)
 			InPosDirection.append(movesNeeded)
 			movesNeeded = 0
 			
@@ -241,7 +327,7 @@ def getCoordinatesToFree(Number, ConflictNumber):
 					InNegDirection.append([x,y])					
 					movesNeeded -= 1
 			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way
+			# before the car moves out of the way( if it cannot move this is 0)
 			InNegDirection.append(movesNeeded)
 
 	# Add the tiles that could be freed in both negative as positive direction
@@ -364,6 +450,13 @@ def printFieldFlipped():
 
 def giveErrorMessage(ErrorMessage):
 	print "ERROR:	" + ErrorMessage
+
+def deepCopyList(list):
+	copiedList = []
+	# for item in list:
+	# 	copiedList.append(item)
+	copiedList = list[::]
+	return copiedList
 
 if __name__ == '__main__':
 	run()

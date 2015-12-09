@@ -26,15 +26,20 @@ PATH_TRACKER = PathTracker()
 SOLUTIONS = []
 # This contains the path to the solution backwards. 
 SOLUTION_PATHS = []
-
+INITIAL_STATE = 10
+LEVEL = 0
 
 
 
 def main():
 	# TEST dept first algorithme:
 
-	initialState = 10
-	algorithm(initialState)
+	# initialState = 10
+	# STATES_ARCHIVE.append([initialState, 0])
+	dfs(INITIAL_STATE, INITIAL_STATE)
+	getSolutionPaths()
+
+	# algorithm(INITIAL_STATE)
 	# print results
 	#print SOLUTIONS
 	print SOLUTION_PATHS
@@ -103,28 +108,31 @@ def getSolutionPaths():
 			for state in STATES_ARCHIVE:
 				if state[0] == parent: 
 					path.append(parent)
-					if state[1] == 0:
+					if state[1] == INITIAL_STATE:
 						notAtRoot = False
 					parent = state[1]
 					break
-		SOLUTION_PATHS.append(path)
+		path.append(INITIAL_STATE)
+		SOLUTION_PATHS.append(path[::-1])
 
 #recursive version (not used because memory will run out faster)
-def dfs(option):
-	#count = count + 1
+def dfs(option, parentOption):
+	global LEVEL;
 	# Stop the loop if option is a repeat or the solution
-	print option
+	print option, "		", LEVEL
 	if optionIsNotNew(option):
 		return
 	if optionIsSolution(option):
-		SOLUTIONS.append(option)
+		SOLUTIONS.append([option, parentOption])
 		return
 	# add option to statelist
-	STATES_ARCHIVE.append(option)
+	STATES_ARCHIVE.append([option, parentOption])
 	# Loop all options while recusevely going deeper in 
 	# the "tree" of possibilities
 	for newOption in allMoves(option):
-		dfs(newOption)
+		LEVEL += 1
+		dfs(newOption, option)
+		LEVEL -= 1
 
 def allMoves(option):
 	return [option + 1, option - 1, option - 2]

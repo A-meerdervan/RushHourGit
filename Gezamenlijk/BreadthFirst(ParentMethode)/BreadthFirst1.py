@@ -21,20 +21,13 @@ CARS_LIST = CarsList()
 
 
 def main():
-	bordVariables = bord(3) # return [carsList,width,exit]
+	bordVariables = bord(2) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = Tree(WIDTH, CARS_LIST.getDirectionsList())
 	algorithm(INITIAL_STATE)
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> 5156c69216521bba734f79f9c01ab8b244d847ff
-	# Print some results
-
 	#Print some results
 	#print "Algorithm is done"
 	#print len(SOLUTION_PATH)
@@ -72,12 +65,12 @@ def algorithm(initialState):
 
 	getSolutionPath()
 
-def deepCopyList(list):
-	copiedList = []
+def deepCopyList(List):
+	# copiedList = []
 	# for item in list:
 	# 	copiedList.append(item)
-	copiedList = list[::]
-	return copiedList
+	# copiedList = list[::]
+	return list(List)
 
 def getSolutionPath():
 	path = [SOLUTION[0]]
@@ -167,7 +160,7 @@ def allMoves(state):
 				moveOptions.append(bord2)
 
 		elif car.isHorizontal and car.length == 3:
-			if state[i] - 1 not in occupied and state[i] not in  range(0,WIDTH*WIDTH,WIDTH) :
+			if state[i] - 1 not in occupied and state[i] not in  range(0,WIDTH*WIDTH,WIDTH):
 				bord[i] -= 1
 				moveOptions.append(bord)
 			if state[i] + 3 not in occupied and state[i] not in  range(WIDTH-3,WIDTH*WIDTH+WIDTH-3,WIDTH):
