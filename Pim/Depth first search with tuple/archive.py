@@ -37,4 +37,5 @@ class StatesArchive(object):
             solutionList.append(state)
             state = parentState
             parentState = self.states[self.listToTuple(state)][1]
+        solutionList.append(state)
         return solutionList[::-1]

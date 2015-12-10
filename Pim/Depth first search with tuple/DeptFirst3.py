@@ -2,6 +2,7 @@
 from archive import StatesArchive
 from CarsList import CarsList
 from Stack import Stack
+from prioritystack import PriorityStack
 from Car import Car
 from allBords import *
 import copy
@@ -25,7 +26,7 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(2) # return [carsList,width,exit]
+	bordVariables = bord(4) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -38,9 +39,8 @@ def main():
 	path1 = SOLUTION_PATHS[-1]
 	print len(SOLUTION_PATHS)
 	#print
-	#for solution in SOLUTION_PATHS:
-		#print len(solution)
-
+	for solution in SOLUTION_PATHS:
+		print len(solution)
 	# print results
 	# print "length solutions ", len(SOLUTIONS)
 	# print SOLUTIONS
@@ -52,7 +52,7 @@ def main():
 	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
-	stack = Stack()
+	stack = PriorityStack() # choose for Stack or PriorityStack
 	# add first state
 	stack.push(initialState)
 	STATES_ARCHIVE.setInitialState(initialState)
@@ -68,11 +68,13 @@ def algorithm(initialState):
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
 				# decrease child count with one
-				if STATES_ARCHIVE.getStateDepth(newOption) > (STATES_ARCHIVE.getStateDepth(option) + 1):
-					STATES_ARCHIVE.setState(newOption, (STATES_ARCHIVE.getStateDepth(option))+1, option)
-					stack.push(newOption)
-				else:
-					continue
+				# replace the if and else statements by a single continue to disable
+				# the search for the best option
+				#if STATES_ARCHIVE.getStateDepth(newOption) > (STATES_ARCHIVE.getStateDepth(option) + 1):
+				#	STATES_ARCHIVE.setState(newOption, (STATES_ARCHIVE.getStateDepth(option))+1, option)
+				#	stack.push(newOption)
+				#else:
+				continue
 			elif optionIsSolution(newOption):
 				# decrease child count with one
 				SOLUTION_PATHS.append(STATES_ARCHIVE.getSolutionPath(newOption, option))
@@ -82,7 +84,8 @@ def algorithm(initialState):
 				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
 				# This will break the for loop so that solutions with equal length
 				# are not evaluated
-				break
+				# break
+				return
 			else:
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
@@ -97,30 +100,6 @@ def deepCopyList(list):
 	# 	copiedList.append(item)
 	copiedList = list[::]
 	return copiedList
-
-def getSolutionPaths():
-	# count = 0
-	for solution in SOLUTIONS:
-		# if count == 10:
-		# 	break
-		path = [solution[0]]
-		parent = solution[1]
-		notAtRoot = True
-		# find the parent of the parent until the root is reached
-		while notAtRoot:
-			# print "Not at root"
-			#find parent state
-			parentOfParrent = STATES_ARCHIVE.getParent(parent) # dit is [ding zelf, zijn pap]
-			path.append(parent)
-			# print "Parent of parent: ", parentOfParrent
-			# print "Intital state: ", INITIAL_STATE
-			if parentOfParrent == INITIAL_STATE:
-				notAtRoot = False
-				# print "bij de root"
-			parent = parentOfParrent
-		# print path
-		SOLUTION_PATHS.append(path)
-		# count += 1
 
 def optionIsNotNew(option):
 	# check tree for state
@@ -155,7 +134,7 @@ def getOccupiedTiles(state):
 	k = 0
 	for car in CARS_LIST.cars:
 
-		if car.isHorizontal and car.length == 2 : # moet niet car[1] maar een link naar de class zijn
+		if car.isHorizontal and car.length == 2 :
 			occupied.append(state[k])
 			occupied.append(state[k]+1)
 		elif not car.isHorizontal and car.length == 2:
@@ -164,8 +143,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and horizontal:
 		elif car.isHorizontal and car.length == 3:
 			occupied.append(state[k])
-			occupied.append(state[k]+WIDTH)
-			occupied.append(state[k]+WIDTH*2)
+			occupied.append(state[k]+1)
+			occupied.append(state[k]+2)
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
@@ -195,12 +174,12 @@ def allMoves(state):
 			if state[i] - WIDTH not in occupied  and state[i] not in  range(WIDTH):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 12 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
+			if state[i] + 2*WIDTH not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 
 		elif car.isHorizontal and car.length == 3:
-			if state[i] - 1 not in occupied and state[i] not in  range(0,WIDTH*WIDTH,WIDTH) :
+			if state[i] - 1 not in occupied and state[i] not in  range(0,WIDTH*WIDTH,WIDTH):
 				bord[i] -= 1
 				moveOptions.append(bord)
 			if state[i] + 3 not in occupied and state[i] not in  range(WIDTH-3,WIDTH*WIDTH+WIDTH-3,WIDTH):
