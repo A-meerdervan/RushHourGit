@@ -18,7 +18,7 @@ SOLUTION_PATHS = []
 # This list shrinks and grows, it keeps
 # track where the algorithm is in the possibilities tree
 # it is used to find the path to a solution
-WIDTH = 6
+WIDTH = 0
 CARS_LIST = CarsList()
 INITIAL_STATE = []
 EXIT = 0
@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(4) # return [carsList,width,exit]
+	bordVariables = bord(6) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
