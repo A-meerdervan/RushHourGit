@@ -99,12 +99,12 @@ def algorithm(initialState):
 		PATH_TRACKER.goUpInTreeIfNeeded()
 	#getSolutionPaths()
 
-def deepCopyList(list):
-	copiedList = []
+def deepCopyList(List):
+	# copiedList = []
 	# for item in list:
 	# 	copiedList.append(item)
-	copiedList = list[::]
-	return copiedList
+	# copiedList = list[::]
+	return list(List)
 
 def getSolutionPaths():
 	# count = 0

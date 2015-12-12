@@ -94,12 +94,13 @@ def algorithm(initialState):
 		# If this node has no children go up as many levels as needed
 	#getSolutionPaths()
 
-def deepCopyList(list):
-	copiedList = []
+def deepCopyList(List):
+	# copiedList = []
 	# for item in list:
 	# 	copiedList.append(item)
-	copiedList = list[::]
-	return copiedList
+	# copiedList = list[::]
+	return list(List)
+
 
 def optionIsNotNew(option):
 	# check tree for state
