@@ -16,7 +16,6 @@ SOLUTION_PATHS = []
 # This list shrinks and grows, it keeps
 # track where the algorithm is in the possibilities tree
 # it is used to find the path to a solution
-WIDTH = 6
 CARS_LIST = CarsList()
 INITIAL_STATE = []
 EXIT = 0
@@ -104,10 +103,12 @@ def algorithm(initialState):
 # only then the priority increases.
 def setPriority(newOption, option):
 	if newOption[-1] > option[-1]:
-		return 0
+		return STATES_ARCHIVE.states[listToTuple(option)][2] + 1 + 20
+	elif newOption[-1] == option[-1]:
+		# Check the parent state's depth
+		return STATES_ARCHIVE.states[listToTuple(option)][2] + 1
 	else:
-		return 0
-		# return STATES_ARCHIVE.states[listToTuple(option)].
+		return STATES_ARCHIVE.states[listToTuple(option)][2] 
 
 def deepCopyList(List):
 	return list(List)

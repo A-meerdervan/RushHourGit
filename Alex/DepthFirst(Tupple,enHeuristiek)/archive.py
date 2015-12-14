@@ -22,10 +22,10 @@ class StatesArchive(object):
     	newOptionTuple = self.listToTuple(newOption)
         parentDepth = self.states[self.listToTuple(parentOption)][2]
         self.states[newOptionTuple] = [newOption, parentOption, (parentDepth + 1)]
-        if parentDepth == 400:
-            testPath = self.getSolutionPath(newOption, parentOption)
-            visList = [[0, False, 2], [1, False, 2], [18, False, 2], [2, True, 2], [11, True, 2], [4, False, 2], [14, True, 3], [8, False, 2], [20, False, 2], [21, True, 2], [23, False, 3], [24, True, 2], [26, False, 3], [38, True, 3], [49, True, 2], [51, False, 2], [52, True, 2], [57, False, 3], [58, True, 2], [72, True, 3], [68, False, 2], [69, False, 2], [70, True, 2], [42, True, 2]]
-            runSimulation(visList, testPath, 9, 9, 0.2) 
+        # if parentDepth == 400:
+        #     testPath = self.getSolutionPath(newOption, parentOption)
+        #     visList = [[0, False, 2], [1, True, 3], [4, False, 2], [5, True, 2], [7, True, 2], [11, False, 3], [12, False, 2], [17, False, 3], [18, True, 2], [22, True, 2], [27, False, 2], [45, True, 2], [48, False, 3], [44, False, 3], [30, False, 2], [59, False, 3], [32, True, 3], [63, False, 2], [73, True, 3], [50, True, 3], [69, True, 3], [37, True, 2]]
+        #     runSimulation(visList, testPath, 9, 9, 0.2) 
 
     def getStateDepth(self, state):
         return self.states[self.listToTuple(state)][2]
