@@ -25,7 +25,7 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(1) # return [carsList,width,exit]
+	bordVariables = bord(2) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -48,7 +48,7 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
+	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.5) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
 	priorityQueue = Queue.PriorityQueue() # choose for Stack or PriorityStack
@@ -58,7 +58,11 @@ def algorithm(initialState):
 	MaxDepth = 1000
 	# loop all possible moves
 	while not priorityQueue.empty():
+		#print "qeueu voor get:", list(priorityQueue.queue)
 		option = priorityQueue.get();
+		#print "dit gaat de qeueu out:", option
+		#print "qeueu na get:", list(priorityQueue.queue)
+		#print ""
 		option = option[1]
 
 		if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
@@ -107,7 +111,7 @@ def optionIsNotNew(option):
 	return STATES_ARCHIVE.checkState(option)
 
 def getPriority(item):
-	return item[-1]
+	return (45- item[-1])
 # def optionIsSolution(option):
 # 	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
 # 	# vrij zijn.
