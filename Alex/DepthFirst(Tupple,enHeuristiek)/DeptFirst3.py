@@ -33,6 +33,7 @@ def main():
 	# this contains the state and it's parent state like:
 	# [state, parentState]
 	global STATES_ARCHIVE; STATES_ARCHIVE = StatesArchive()
+	print CARS_LIST.getVisualisationList()
 	algorithm(INITIAL_STATE)
 
 	print "Algorithm is done"
@@ -57,12 +58,15 @@ def algorithm(initialState):
 	stack.push(initialState, 0)
 	STATES_ARCHIVE.setInitialState(initialState)
 	MaxDepth = 1000
+	statesCount = 0
+	statesGen = 0
 	# loop all possible moves
 	while stack.isNotEmpty():
 		option = stack.pop();
 		if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
 			continue
 		allOptions = allMoves(option)
+		statesGen += len(allOptions)
 		# Loop all options and (conditionaly) store them on the stack to revisit later
 		for newOption in allOptions:
 			# Stop the loop if option is a repeat or the solution
@@ -77,6 +81,7 @@ def algorithm(initialState):
 			elif optionIsSolution(newOption):
 				# decrease child count with one
 				SOLUTION_PATHS.append(STATES_ARCHIVE.getSolutionPath(newOption, option))
+
 				#print "max dept wanneer oplossing is gevonden", MaxDepth
 				# When a shorter solution is found the max depth of the search is set to that length
 				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
@@ -90,14 +95,19 @@ def algorithm(initialState):
 				stack.push(newOption, priority)
 				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
+				if statesCount%10000 == 0:
+					print "st added: ", statesCount
+					print "st gen:	", statesGen
+				statesCount += 1
 
 # The heuristic, when the red car moves to the right this is seen as an advantage
 # only then the priority increases.
 def setPriority(newOption, option):
 	if newOption[-1] > option[-1]:
-		return 1
+		return 0
 	else:
 		return 0
+		# return STATES_ARCHIVE.states[listToTuple(option)].
 
 def deepCopyList(List):
 	return list(List)
