@@ -11,7 +11,7 @@ length is the length of a car
         # Redirect output to a queue
         self.firstMainTile = firstMainTile
         self.isHorizontal = isHorizontal
-        self.length = Length
+        self.Length = Length
 
     def getTileNumbers(self, mainTileNumber, width):
     	# this function is used to check wheter a car is in the way of the red car,
