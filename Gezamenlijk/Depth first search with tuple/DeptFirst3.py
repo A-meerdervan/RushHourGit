@@ -1,11 +1,12 @@
 
 from archive import StatesArchive
 from CarsList import CarsList
+from Stack import Stack
+from prioritystack import PriorityStack
 from Car import Car
 from allBords import *
 import copy
 from rushhour_visualisation import *
-import Queue
 # this contains the state and it's parent state like:
 # [state, parentState]
 STATES_ARCHIVE = []
@@ -17,7 +18,7 @@ SOLUTION_PATHS = []
 # This list shrinks and grows, it keeps
 # track where the algorithm is in the possibilities tree
 # it is used to find the path to a solution
-WIDTH = 6
+WIDTH = 0
 CARS_LIST = CarsList()
 INITIAL_STATE = []
 EXIT = 0
@@ -25,7 +26,7 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(5) # return [carsList,width,exit]
+	bordVariables = bord(6) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -48,29 +49,20 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.5) # slordig dubble WIDTH meegeven
+	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
-	priorityQueue = Queue.PriorityQueue() # choose for Stack or PriorityStack
+	stack = PriorityStack() # choose for Stack or PriorityStack
 	# add first state
-	priorityQueue.put((1, initialState))
+	stack.push(initialState)
 	STATES_ARCHIVE.setInitialState(initialState)
 	MaxDepth = 1000
-	statescount = 0
-	statesgen = 0
 	# loop all possible moves
-	while not priorityQueue.empty():
-		#print "qeueu voor get:", list(priorityQueue.queue)
-		option = priorityQueue.get();
-		#print "dit gaat de qeueu out:", option
-		#print "qeueu na get:", list(priorityQueue.queue)
-		#print ""
-		option = option[1]
-
+	while stack.isNotEmpty():
+		option = stack.pop();
 		if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
 			continue
 		allOptions = allMoves(option)
-		statesgen += len(allOptions)
 		# Loop all options and (conditionaly) store them on the stack to revisit later
 		for newOption in allOptions:
 			# Stop the loop if option is a repeat or the solution
@@ -92,33 +84,28 @@ def algorithm(initialState):
 				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
 				# This will break the for loop so that solutions with equal length
 				# are not evaluated
-				break
-				#return
+				# break
+				return
 			else:
 				# add the option to the stack for later evaluation
-				priorityQueue.put((getPriority(newOption), newOption))
+				stack.push(newOption)
 				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
-				if statescount%10000 == 0:
-					print "st added: ", statescount
-					print "st gen: ", statesgen
-				statescount += 1
 		# If this node has no children go up as many levels as needed
 	#getSolutionPaths()
 
-def deepCopyList(list):
-	copiedList = []
+def deepCopyList(List):
+	# copiedList = []
 	# for item in list:
 	# 	copiedList.append(item)
-	copiedList = list[::]
-	return copiedList
+	# copiedList = list[::]
+	return list(List)
+
 
 def optionIsNotNew(option):
 	# check tree for state
 	return STATES_ARCHIVE.checkState(option)
 
-def getPriority(item):
-	return (45- item[-1])
 # def optionIsSolution(option):
 # 	# Verzin hier iets voor, gewoon als alle dingen van rode auto tot uitgang
 # 	# vrij zijn.
