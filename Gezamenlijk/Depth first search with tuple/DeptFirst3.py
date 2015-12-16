@@ -26,21 +26,26 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(6) # return [carsList,width,exit]
+	bordVariables = bord(4) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = StatesArchive()
-	algorithm(INITIAL_STATE)
+	statesGenerated = algorithm(INITIAL_STATE)
 
 	print "Algorithm is done"
 	path1 = SOLUTION_PATHS[-1]
-	print len(SOLUTION_PATHS)
-	#print
-	for solution in SOLUTION_PATHS:
-		print len(solution)
+	print "amount of solutions: ", len(SOLUTION_PATHS)
+	listOfLengths = []
+	for path in SOLUTION_PATHS:
+		listOfLengths.append(len(path))
+	print "shortest found length: ", min(listOfLengths)
+	print "length of dicionary: ", len(STATES_ARCHIVE.states)
+	print "amount of stated generated: ", statesGenerated
+	#for solution in SOLUTION_PATHS:
+	#	print len(solution)
 	# print results
 	# print "length solutions ", len(SOLUTIONS)
 	# print SOLUTIONS
@@ -49,22 +54,28 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
+	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
-	stack = PriorityStack() # choose for Stack or PriorityStack
+	stack = Stack() # choose for Stack or PriorityStack
 	# add first state
 	stack.push(initialState)
 	STATES_ARCHIVE.setInitialState(initialState)
-	MaxDepth = 1000
+	# MaxDepth = 100000
+	statesGenerated = 0
 	# loop all possible moves
 	while stack.isNotEmpty():
 		option = stack.pop();
-		if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
-			continue
+		#if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
+		#	continue
 		allOptions = allMoves(option)
+		statesGenerated += len(allOptions)
 		# Loop all options and (conditionaly) store them on the stack to revisit later
+		#for optionIndex in random.sample(range(0, len(allOptions)), len(allOptions)):
+		#	newOption = allOptions[optionIndex]
+
 		for newOption in allOptions:
+
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
 				# decrease child count with one
@@ -81,17 +92,18 @@ def algorithm(initialState):
 				#print "max dept wanneer oplossing is gevonden", MaxDepth
 				#print "length path", len(PATH_TRACKER.path)
 				# When a shorter solution is found the max depth of the search is set to that length
-				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
+				# MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
 				# This will break the for loop so that solutions with equal length
 				# are not evaluated
-				# break
-				return
+				#break
+				#return statesGenerated
 			else:
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
 				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
 		# If this node has no children go up as many levels as needed
+	return statesGenerated
 	#getSolutionPaths()
 
 def deepCopyList(List):
