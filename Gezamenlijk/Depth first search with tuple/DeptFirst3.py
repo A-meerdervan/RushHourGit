@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def main():
-	bordVariables = bord(4) # return [carsList,width,exit]
+	bordVariables = bord(1) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -54,7 +54,7 @@ def main():
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
 
-	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.2) # slordig dubble WIDTH meegeven
+	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.0002) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
 	stack = Stack() # choose for Stack or PriorityStack
@@ -71,10 +71,10 @@ def algorithm(initialState):
 		allOptions = allMoves(option)
 		statesGenerated += len(allOptions)
 		# Loop all options and (conditionaly) store them on the stack to revisit later
-		#for optionIndex in random.sample(range(0, len(allOptions)), len(allOptions)):
-		#	newOption = allOptions[optionIndex]
+		for optionIndex in random.sample(range(0, len(allOptions)), len(allOptions)):
+			newOption = allOptions[optionIndex]
 
-		for newOption in allOptions:
+		#for newOption in allOptions:
 
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
@@ -96,7 +96,7 @@ def algorithm(initialState):
 				# This will break the for loop so that solutions with equal length
 				# are not evaluated
 				#break
-				#return statesGenerated
+				return statesGenerated
 			else:
 				# add the option to the stack for later evaluation
 				stack.push(newOption)
