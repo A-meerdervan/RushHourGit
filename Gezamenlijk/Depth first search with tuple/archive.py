@@ -23,7 +23,7 @@ class StatesArchive(object):
     def getStateDepth(self, state):
         return self.states[self.listToTuple(state)][2]
 
-    def setState(self, state, depth, parentState = []):
+    def setStates(self, state, depth, parentState = []):
         stateTuple = self.listToTuple(state)
         self.states[stateTuple][2] = depth
         if parentState != []:
