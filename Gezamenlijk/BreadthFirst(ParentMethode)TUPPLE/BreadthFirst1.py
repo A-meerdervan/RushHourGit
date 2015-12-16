@@ -21,7 +21,7 @@ CARS_LIST = CarsList()
 
 
 def main():
-	bordVariables = bord(6) # return [carsList,width,exit]
+	bordVariables = bord(4) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -29,10 +29,10 @@ def main():
 	global STATES_ARCHIVE; STATES_ARCHIVE = dict()
 	algorithm(INITIAL_STATE)
 	#Print some results
-	#print "Algorithm is done"
-	#print len(SOLUTION_PATH)
+	print "Algorithm is done"
+	print len(SOLUTION_PATH)
 
-	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.5)
+	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.2)
 
 def algorithm(initialState):
 	queue = []
@@ -43,9 +43,10 @@ def algorithm(initialState):
 		initialStateTupple += (number,)
 
 	STATES_ARCHIVE[initialStateTupple] = [initialState, initialState]
+	statesCount = 0
 	# loop all possible moves
 	solutionNotFound = True
-	while (not (queue == []) and solutionNotFound) :
+	while queue and solutionNotFound :
 		option = queue.pop(0)
 
 		# Loop all options and (conditionaly) store them on the stack to revisit later
@@ -54,6 +55,7 @@ def algorithm(initialState):
 			if optionIsNotNew(newOption):
 				continue
 			elif optionIsSolution(newOption):
+				print statesCount
 				SOLUTION.append(newOption)
 				SOLUTION.append(option)
 				solutionNotFound = False
@@ -61,7 +63,6 @@ def algorithm(initialState):
 				break
 			else:
 				# add the option to the queue for later evaluation
-				#print "lq:" , len(queue)
 				queue.append(newOption)
 
 				# add the option to the states archive
@@ -70,6 +71,7 @@ def algorithm(initialState):
 					newOptionTupple += (number,)
 
 				STATES_ARCHIVE[newOptionTupple] = [newOption, option]
+				statesCount += 1
 	getSolutionPath()
 
 def deepCopyList(List):
@@ -98,6 +100,7 @@ def getSolutionPath():
 			notAtRoot = False
 			# print "bij de root"
 		parent = parentOfParrent
+	path.append(INITIAL_STATE)
 	# store the path (but the path needs to be flipped)
 	global SOLUTION_PATH; SOLUTION_PATH = path[::-1]
 
