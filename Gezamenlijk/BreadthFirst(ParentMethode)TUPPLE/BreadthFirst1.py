@@ -21,32 +21,29 @@ CARS_LIST = CarsList()
 
 
 def main():
-	bordVariables = bord(4) # return [carsList,width,exit]
+	bordVariables = bord(2) #  [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = dict()
+	
 	algorithm(INITIAL_STATE)
 	#Print some results
 	print "Algorithm is done"
 	print len(SOLUTION_PATH)
 
-	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.2)
+	# runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.8)
 
 def algorithm(initialState):
 	queue = []
 	queue.append(initialState)
-	# add first state
-	initialStateTupple = ()
-	for number in initialState:
-		initialStateTupple += (number,)
-
-	STATES_ARCHIVE[initialStateTupple] = [initialState, initialState]
 	statesCount = 0
+	# add first state
+	STATES_ARCHIVE[tuple(initialState)] = [initialState, initialState]
 	# loop all possible moves
 	solutionNotFound = True
-	while queue and solutionNotFound :
+	while (not (queue == []) and solutionNotFound) :
 		option = queue.pop(0)
 
 		# Loop all options and (conditionaly) store them on the stack to revisit later
@@ -63,22 +60,14 @@ def algorithm(initialState):
 				break
 			else:
 				# add the option to the queue for later evaluation
+				#print "lq:" , len(queue)
 				queue.append(newOption)
-
-				# add the option to the states archive
-				newOptionTupple = ()
-				for number in newOption:
-					newOptionTupple += (number,)
-
-				STATES_ARCHIVE[newOptionTupple] = [newOption, option]
 				statesCount += 1
+				# add the option to the states archive
+				STATES_ARCHIVE[tuple(newOption)] = [newOption, option]
 	getSolutionPath()
 
 def deepCopyList(List):
-	# copiedList = []
-	# for item in list:
-	# 	copiedList.append(item)
-	# copiedList = list[::]
 	return list(List)
 
 def getSolutionPath():
@@ -89,10 +78,7 @@ def getSolutionPath():
 	while notAtRoot:
 		# print "Not at root"
 		#find parent state
-		parentTupple = ()
-		for number in parent:
-			parentTupple += (number,)
-		parentOfParrent = STATES_ARCHIVE[parentTupple][1] # dit is [ding zelf, zijn pap]
+		parentOfParrent = STATES_ARCHIVE[tuple(parent)][1] # dit is [ding zelf, zijn pap]
 		# parentOfParrent = STATES_ARCHIVE.getParent(parent) # dit is [ding zelf, zijn pap]
 		path.append(parent)
 
@@ -100,35 +86,23 @@ def getSolutionPath():
 			notAtRoot = False
 			# print "bij de root"
 		parent = parentOfParrent
-	path.append(INITIAL_STATE)
 	# store the path (but the path needs to be flipped)
 	global SOLUTION_PATH; SOLUTION_PATH = path[::-1]
 
 def optionIsNotNew(option):
-	# turn option into tupple
-	tuppleOption = ()
-	for number in option:
-		tuppleOption = tuppleOption + (number,)
 	# check tree for state
-	return (tuppleOption in STATES_ARCHIVE)
+	return tuple(option) in STATES_ARCHIVE
 
 def optionIsSolution(state):
-	# if state[-1] == 36:
-	# 	return True
-	# return False TESTEN!!
-	occupied = getOccupiedTiles(state)
-	arraycounter =[]
-	counter = 1
-	while state[-1] < EXIT:
-		counter += 1
-		arraycounter.append(counter)
-		state[-1] += 1
-	state[-1] = state[-1] - counter + 1
-
-	for number in arraycounter:
-		tileCheck = state[-1] + number
-		if tileCheck in occupied:
-			return False
+	carIndex = 0
+	tilesToExit = range(state[-1] + 2, EXIT + 2)
+	# loop the cars in the state and check if they block the red car
+	for mainTileNumber in state:
+		for carTile in CARS_LIST.cars[carIndex].getTileNumbers(state[carIndex], WIDTH):
+			# if a car is in the way, the option is not a solution
+			if carTile in tilesToExit:
+				return False
+		carIndex += 1
 	return True
 
 def getOccupiedTiles(state):
@@ -145,8 +119,8 @@ def getOccupiedTiles(state):
 		# The car is 3 long and horizontal:
 		elif car.isHorizontal and car.length == 3:
 			occupied.append(state[k])
-			occupied.append(state[k]+1)
-			occupied.append(state[k]+2)
+			occupied.append(state[k]+WIDTH)
+			occupied.append(state[k]+WIDTH*2)
 		# The car is 3 long and veritcal:
 		else:
 			occupied.append(state[k])
@@ -176,7 +150,7 @@ def allMoves(state):
 			if state[i] - WIDTH not in occupied  and state[i] not in  range(WIDTH):
 				bord[i] -= WIDTH
 				moveOptions.append(bord)
-			if state[i] + 2*WIDTH not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
+			if state[i] + 12 not in occupied and state[i] not in range(WIDTH*(WIDTH-2),WIDTH*(WIDTH-1)):
 				bord2[i] += WIDTH
 				moveOptions.append(bord2)
 
