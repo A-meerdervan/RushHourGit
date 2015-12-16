@@ -54,7 +54,7 @@ class RushhourVisualisation:
 
     def _status_string(self, time):
         "Returns an appropriate status string to print."
-        return "Time: %d" % time
+        return "Steps: %d" % time
 
     def _map_coords(self, x, y):
         "Maps grid positions to window positions (in pixels)."
@@ -169,6 +169,7 @@ def generateColors(visualisationList):
 def runSimulation(visualisationList, stateList, width, height, delay):
     generateColors(visualisationList)
     anim = RushhourVisualisation(width, height, visualisationList, delay)
+    time.sleep(15)
     for states in stateList:
         anim.update(states)
     anim.done()

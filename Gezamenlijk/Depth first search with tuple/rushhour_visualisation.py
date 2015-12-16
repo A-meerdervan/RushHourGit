@@ -169,6 +169,7 @@ def generateColors(visualisationList):
 def runSimulation(visualisationList, stateList, width, height, delay):
     generateColors(visualisationList)
     anim = RushhourVisualisation(width, height, visualisationList, delay)
+    time.sleep(20)
     for states in stateList:
         anim.update(states)
     anim.done()

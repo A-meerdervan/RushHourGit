@@ -21,7 +21,7 @@ CARS_LIST = CarsList()
 
 
 def main():
-	bordVariables = bord(6) #  [carsList,width,exit]
+	bordVariables = bord(1) #  [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -34,7 +34,7 @@ def main():
 	print "Algorithm is done"
 	print len(SOLUTION_PATH)
 
-	#runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.8)
+	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.5)
 
 def algorithm(initialState):
 	queue = []
@@ -87,6 +87,7 @@ def getSolutionPath():
 			notAtRoot = False
 			# print "bij de root"
 		parent = parentOfParrent
+	path.append(INITIAL_STATE)
 	# store the path (but the path needs to be flipped)
 	global SOLUTION_PATH; SOLUTION_PATH = path[::-1]
 

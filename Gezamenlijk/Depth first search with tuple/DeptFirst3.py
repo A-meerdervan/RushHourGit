@@ -53,8 +53,8 @@ def main():
 	# print "START"
 	# for i in range(0, 3100, 30):
 	# 	print len(SOLUTION_PATHS[i])
-
-	#runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.0002) # slordig dubble WIDTH meegeven
+	raw_input("please enter to continue")
+	runSimulation(CARS_LIST.getVisualisationList(), path1, WIDTH, WIDTH, 0.5) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
 	stack = Stack() # choose for Stack or PriorityStack
