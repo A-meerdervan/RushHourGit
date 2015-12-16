@@ -26,25 +26,26 @@ EXIT_HEIGHT = 3
 RED_CAR = "| R "
 RED_CAR_INT = 6
 FIELD = []
-CARSLIST = []
+CARS_LIST = CarsList()
 BLOCKERS_INFO = dict()
-
+INITIAL_STATE = []
+CARSLIST = []
 
 def run():
-	createEmptyField()
+	# createEmptyField()
 	# insert Exit
-	placeExit("Right", EXIT_HEIGHT)
+	# placeExit("Right", EXIT_HEIGHT)
 
 	# insert cars
-	Car1 = Car([0,5], "Horizontal", 5, 0)
-	Car2 = Car([4,2], "Vertical", 3, 1)
-	Car3 = Car([2,3], "Vertical", 2, 2)
-	Car4 = Car([1,2], "Horizontal", 2, 3)
-	Car5 = Car([3,0], "Horizontal", 2, 4)
-	Car6 = Car([0,0], "Vertical", 3, 5)
-	RedCar = Car([0,3], "Horizontal" , 2, 6)
+	Car1 = Car([0,5], True, 3)
+	Car2 = Car([4,2], False, 3)
+	Car3 = Car([2,3], False, 2)
+	Car4 = Car([1,2], True, 2)
+	Car5 = Car([3,0], True, 2)
+	Car6 = Car([0,0], False, 3)
+	RedCar = Car([0,3], True , 2)
 
-
+	# This file  uses this list wich is not a class. This should change
 	CARSLIST.append(Car1)
 	CARSLIST.append(Car2)
 	CARSLIST.append(Car3)
@@ -53,9 +54,28 @@ def run():
 	CARSLIST.append(Car6)
 	CARSLIST.append(RedCar)
 
+	# This is in the new format
+	CARS_LIST.cars.append(Car1)
+	CARS_LIST.cars.append(Car2)
+	CARS_LIST.cars.append(Car3)
+	CARS_LIST.cars.append(Car4)
+	CARS_LIST.cars.append(Car5)
+	CARS_LIST.cars.append(Car6)
+	CARS_LIST.cars.append(RedCar)
+
+
+	# maak een state hiervan
+	for car in CARS_LIST.cars:
+		INITIAL_STATE.append(car.MainCoordinate[0] + car.MainCoordinate[1]*WIDTH)
+
+	# Create the an empty field filled with 0 integers that uses x, y coordinates
+	createEmptyField()
+	printFieldFlipped()
+	placeCars(INITIAL_STATE)
+	printFieldFlipped()
+
 	blockingLists = []
-	for car in CARSLIST:
-		placeCar(car)
+	for tileNumber in INITIAL_STATE:
 		blockingLists.append([ [], [], ])
 
 	RED_CAR_INT = len(CARSLIST) - 1
@@ -236,7 +256,7 @@ def recursiveCheck(carsCheckedParrent, carNumberTop, ownCarNumber, conflictNumbe
 				print "loop update was geen verbetering"
 				return
 			# the direction of the car decides whether the conflict is in y or x
-			if CARSLIST[ownCarNumber].Direction == "Horizontal":
+			if CARSLIST[ownCarNumber].isHorizontal:
 				conflictNumber = CARSLIST[ownCarNumber].MainCoordinate[1]
 			else:	conflictNumber = CARSLIST[ownCarNumber].MainCoordinate[0]
 			# Recursively checkout the next car
@@ -279,45 +299,20 @@ def getCoordinatesToFree(Number, ConflictNumber):
 	# The red car is different because it should not move backwards
 	if Number == RED_CAR_INT:
 		y = EXIT_HEIGHT		
-		for x in range(car.MainCoordinate[0] + car.Length, WIDTH):
+		for x in range(car.MainCoordinate[0] + car.length, WIDTH):
 			movesNeeded += 1
 			InPosDirection.append([x,y])
 		InPosDirection.append(movesNeeded)
 		InNegDirection.append(0)
 	# For every other car:
 	else:
-		# if the direction is vertical only y changes
-		if car.Direction == "Vertical":
-			x = car.MainCoordinate[0]
-			# Check if moving the car up would place it outside the field
-			if (ConflictNumber + car.Length) < HEIGHT:
-				# add the coordinates of where the car could move to
-				for i in range((car.Length + car.MainCoordinate[1] - ConflictNumber), car.Length + 1):
-					y = ConflictNumber + i
-					InPosDirection.append([x,y])
-					movesNeeded += 1
-			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way( if it cannot move this is 0)
-			InPosDirection.append(movesNeeded)
-			movesNeeded = 0
-			# Check if moving the car down, would place it outside the field
-			if (ConflictNumber - car.Length) >= 0:
-				# Add all tiles that have to be free to move this car
-				for i in range((1 + ConflictNumber  - car.MainCoordinate[1]), car.Length + 1):
-					y = ConflictNumber - i
-					InNegDirection.append([x,y])
-					movesNeeded -= 1
-			# At the end of the list comes the number of moves that has to be done
-			# before the car moves out of the way( if it cannot move this is 0)
-			InNegDirection.append(movesNeeded)
-		
-		#car.Direction == "Horizontal"
-		else:
+		# if the direction is horizontal only x changes
+		if car.isHorizontal:
 			y = car.MainCoordinate[1]
 			# Check if moving the car to the right would place it outside the field
-			if (ConflictNumber + car.Length) < WIDTH:
+			if (ConflictNumber + car.length) < WIDTH:
 				# add the coordinates of where the car could move to
-				for i in range(car.Length + car.MainCoordinate[0] - ConflictNumber, car.Length + 1):
+				for i in range(car.length + car.MainCoordinate[0] - ConflictNumber, car.length + 1):
 					x = ConflictNumber + i
 					InPosDirection.append([x,y])
 					movesNeeded += 1
@@ -327,8 +322,8 @@ def getCoordinatesToFree(Number, ConflictNumber):
 			movesNeeded = 0
 			
 			# Check if moving the car to the left, would place it outside the field
-			if (ConflictNumber - car.Length) >= 0:
-				for i in range(1 + ConflictNumber - car.MainCoordinate[0], car.Length + 1):
+			if (ConflictNumber - car.length) >= 0:
+				for i in range(1 + ConflictNumber - car.MainCoordinate[0], car.length + 1):
 					x = ConflictNumber - i
 					InNegDirection.append([x,y])					
 					movesNeeded -= 1
@@ -336,18 +331,56 @@ def getCoordinatesToFree(Number, ConflictNumber):
 			# before the car moves out of the way( if it cannot move this is 0)
 			InNegDirection.append(movesNeeded)
 
+		# if the direction is vertical only y changes
+		else:
+			x = car.MainCoordinate[0]
+			# Check if moving the car up would place it outside the field
+			if (ConflictNumber + car.length) < HEIGHT:
+				# add the coordinates of where the car could move to
+				for i in range((car.length + car.MainCoordinate[1] - ConflictNumber), car.length + 1):
+					y = ConflictNumber + i
+					InPosDirection.append([x,y])
+					movesNeeded += 1
+			# At the end of the list comes the number of moves that has to be done
+			# before the car moves out of the way( if it cannot move this is 0)
+			InPosDirection.append(movesNeeded)
+			movesNeeded = 0
+			# Check if moving the car down, would place it outside the field
+			if (ConflictNumber - car.length) >= 0:
+				# Add all tiles that have to be free to move this car
+				for i in range((1 + ConflictNumber  - car.MainCoordinate[1]), car.length + 1):
+					y = ConflictNumber - i
+					InNegDirection.append([x,y])
+					movesNeeded -= 1
+			# At the end of the list comes the number of moves that has to be done
+			# before the car moves out of the way( if it cannot move this is 0)
+			InNegDirection.append(movesNeeded)
+		
+
+
 	# Add the tiles that could be freed in both negative as positive direction
 	CoordinatesToFree.append(InPosDirection)
 	CoordinatesToFree.append(InNegDirection)
 
 	return CoordinatesToFree
 
+def placeCars(state):
+	i = 0
+	for tileNumber in state:
+		for Coordinate in CARS_LIST.cars[i].getCoordinates(tileNumber, WIDTH):
+			# Coordinate is (x,y) but Field takes[y][x]
+			FIELD[Coordinate[1]][Coordinate[0]] = i
+		i += 1
+
+
+
+
 def moveCar(Number, Steps):
 	# First clear the car in the field
 	for Coordinate in CARSLIST[Number].Coordinates:
 		FIELD[Coordinate[1] ][ Coordinate[0] ] = EMPTY_SPOT_INT
 	# Now Set the new Coordinates and place the car
-	if CARSLIST[Number].Direction == "Horizontal":
+	if CARSLIST[Number].isHorizontal:
 		CARSLIST[Number].setMainCoordinate([CARSLIST[Number].MainCoordinate[0] + Steps, CARSLIST[Number].MainCoordinate[1] ])
 	# Car is Vertical
 	else:
@@ -362,11 +395,11 @@ def canMoveCar(carNumber, Steps):
 	# Do a deep copy to emulate pass by value, since when the car cannot move, the
 	# Coordinates should not change
 	car = deepcopy(CARSLIST[carNumber])
-	if car.Direction == "Horizontal":
+	if car.isHorizontal:
 		# Check if the car will be within the Field bounds, if not return False
 		if car.MainCoordinate[0] + Steps < 0:
 			return False
-		elif car.MainCoordinate[0] + car.Length -1 + Steps >= WIDTH:
+		elif car.MainCoordinate[0] + car.length -1 + Steps >= WIDTH:
 			return False
 		# Move the copy of the car
 		car.setMainCoordinate([car.MainCoordinate[0] + Steps, car.MainCoordinate[1] ])
@@ -375,7 +408,7 @@ def canMoveCar(carNumber, Steps):
 		# Check if the car will be within the Field bounds, if not return False
 		if car.MainCoordinate[1] + Steps < 0:
 			return False
-		elif car.MainCoordinate[1] + car.Length -1 + Steps >= HEIGHT:
+		elif car.MainCoordinate[1] + car.length -1 + Steps >= HEIGHT:
 			return False
 		# Move the copy of the car
 		car.setMainCoordinate([car.MainCoordinate[0], car.MainCoordinate[1] + Steps])

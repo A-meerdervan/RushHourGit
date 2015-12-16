@@ -18,15 +18,13 @@ SOLUTION_PATHS = []
 # This list shrinks and grows, it keeps
 # track where the algorithm is in the possibilities tree
 # it is used to find the path to a solution
-WIDTH = 6
 CARS_LIST = CarsList()
 INITIAL_STATE = []
-EXIT = 0
 
 
 
 def main():
-	bordVariables = bord(4) # return [carsList,width,exit]
+	bordVariables = bord(5) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -34,12 +32,13 @@ def main():
 	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = StatesArchive()
+
 	algorithm(INITIAL_STATE)
 
 	print "Algorithm is done"
 	path1 = SOLUTION_PATHS[-1]
 	print len(SOLUTION_PATHS)
-	#print
+	# #print
 	for solution in SOLUTION_PATHS:
 		print len(solution)
 	# print results
@@ -87,6 +86,8 @@ def algorithm(initialState):
 				#else:
 				continue
 			elif optionIsSolution(newOption):
+				print statesCount
+				print statesGen
 				# decrease child count with one
 				SOLUTION_PATHS.append(STATES_ARCHIVE.getSolutionPath(newOption, option))
 				#print "max dept wanneer oplossing is gevonden", MaxDepth
@@ -110,15 +111,30 @@ def algorithm(initialState):
 	#getSolutionPaths()
 
 def getPriority(newOption, option):
-	
+	priority = 0
+	priority += numberOfCarsBlocking(newOption)
+
 	if newOption[-1] > option[-1]:
-		return STATES_ARCHIVE.states[listToTuple(option)][2] + 1
+		return priority + STATES_ARCHIVE.states[listToTuple(option)][2] + 1
 	elif newOption[-1] == option[-1]:
 		# Check the parent state's depth
-		return STATES_ARCHIVE.states[listToTuple(option)][2] + 1 + 20
+		return priority + STATES_ARCHIVE.states[listToTuple(option)][2] + 1 + 20
 		# if the car moves to the left, the score is one extra
 	else:
-		return STATES_ARCHIVE.states[listToTuple(option)][2] +  2 + 20 # + 2
+		return priority + STATES_ARCHIVE.states[listToTuple(option)][2] +  2 + 20 # + 2
+
+def numberOfCarsBlocking(state):
+	# Create an empty field
+	blockingCars = 0
+	carIndex = 0
+	tilesToExit = range(state[-1] + 2, EXIT + 2)
+	# loop the cars in the state and check if they block the red car
+	for mainTileNumber in state:
+		for carTile in CARS_LIST.cars[carIndex].getTileNumbers(state[carIndex], WIDTH):
+			if carTile in tilesToExit:
+				blockingCars += 1
+		carIndex += 1
+	return blockingCars 
 
 def deepCopyList(list):
 	copiedList = []
