@@ -1,5 +1,3 @@
-
-
 class Car:
     """
 maintile is the tile with the closest path to the origin
@@ -18,14 +16,9 @@ length is the length of a car
     	# a horizontal car is never in the way
     	if self.isHorizontal:
     		return []
-    		# if self.length == 2:
-    		# 	return [mainTileNumber, mainTileNumber + 1]
-    		# else:
-    		# 	return [mainTileNumber, mainTileNumber + 1, mainTileNumber + 2]
     	# The car is Vertical
     	else:
     		if self.length == 2:
     			return [mainTileNumber, mainTileNumber + width]
     		else:
     			return [mainTileNumber, mainTileNumber + width, mainTileNumber + 2*width]
-

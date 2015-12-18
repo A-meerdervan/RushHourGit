@@ -6,23 +6,21 @@ import random
 import copy
 from rushhour_visualisation import *
 import Queue
-# this contains the state and it's parent state like:
-# [state, parentState]
+
+# Initialize global variables
 STATES_ARCHIVE = []
-# this contains the solution state and it's parent state like:
-# [state, parentState]
-SOLUTIONS = []
-# This contains the path to the solution backwards.
 SOLUTION_PATHS = []
-# This list shrinks and grows, it keeps
-# track where the algorithm is in the possibilities tree
-# it is used to find the path to a solution
 CARS_LIST = CarsList()
 INITIAL_STATE = []
 
-
+# main is the main function, which sets the global variables, runs the algorithm,
+# prints the outcome of the algorithm and runs the simulation
 def main():
-	bordVariables = bord(1) # return [carsList,width,exit]
+
+	# choose the bord to perform the algoritmh on (1-7)
+	bordVariables = bord(1)
+
+	# set global variables
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
@@ -30,59 +28,73 @@ def main():
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = StatesArchive()
 
-	# Run the main algorithm
+	# run the A star algorithm
 	algorithm(INITIAL_STATE)
 
+	# print the results of the algorithm
 	print "Algorithm is done"
 	shortestPath = SOLUTION_PATHS[-1]
-	runSimulation(CARS_LIST.getVisualisationList(), shortestPath, WIDTH, WIDTH, 0.5) # slordig dubble WIDTH meegeven
 
+	# run the simulation of the shortest path
+	runSimulation(CARS_LIST.getVisualisationList(), shortestPath, WIDTH, WIDTH, 0.5)
+
+
+# the algorithm function runs the A star algorithm. It takes a input
+# the initial state.
 def algorithm(initialState):
+
 	priorityQueue = Queue.PriorityQueue()
-	# add first state
 	priorityQueue.put((1, initialState))
+
+	# set the initial state in the archive
 	STATES_ARCHIVE.setInitialState(initialState)
-	MaxDepth = 1000
+
+	# set variables to count the generated states
 	statesCount = 0
 	statesGen = 0
-	# loop all possible moves
+
+	# run the algoritm until the queue is empty
 	while not priorityQueue.empty():
-		#print "qeueu voor get:", list(priorityQueue.queue)
+
+		# get the first item of the queue
 		option = priorityQueue.get();
-		#print "dit gaat de qeueu out:", option
-		#print "qeueu na get:", list(priorityQueue.queue)
-		#print ""
+		# get only the state and cut the priority
 		option = option[1]
 
-		if STATES_ARCHIVE.getStateDepth(option) >= MaxDepth:
-			continue
+		# make a list of all possible states (from the dequeued state)
 		allOptions = allMoves(option)
+		# update the counter of the states generated
 		statesGen += len(allOptions)
-		# Loop all options and (conditionaly) store them on the stack to revisit later
+
+		# this loop selects a random state from the list
+		# of all possible states.
 		for optionIndex in random.sample(range(0, len(allOptions)), len(allOptions)):
 			newOption = allOptions[optionIndex]
-			# Stop the loop if option is a repeat or the solution
+
+			# check if the state is already in the archive
 			if optionIsNotNew(newOption):
 				continue
+			# check if the state is a solution, then add it to the solutions
+			# and print the state values
 			elif optionIsSolution(newOption):
 				print statesCount
 				print statesGen
-				# decrease child count with one
 				SOLUTION_PATHS.append(STATES_ARCHIVE.getSolutionPath(newOption, option))
-				# When a shorter solution is found the max depth of the search is set to that length
-				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
 				return
+			# enqueue the state to the priorityQueue and add it to the archive
 			else:
-				# add the option to the stack for later evaluation
 				priorityQueue.put((getPriority(newOption, option), newOption))
-				# add the option to the states archive
 				STATES_ARCHIVE.addState(newOption, option)
+
+				# print the state values once per 10000 states generated
 				if statesCount%10000 == 0:
 					print "st added: ", statesCount
 					print "st gen:	", statesGen
 				statesCount += 1
-		# If this node has no children go up as many levels as needed
 
+
+# this function takes the state and its previous state and returns a
+# priorityvalue of the state, based on depth of the state and car movement
 def getPriority(newOption, option):
 	priority = 0
 	priority += numberOfCarsBlocking(newOption)
@@ -96,6 +108,8 @@ def getPriority(newOption, option):
 	else:
 		return priority + STATES_ARCHIVE.states[listToTuple(option)][2] +  2 + 20 # + 2
 
+
+# this function takes a state an counts the number of cars blocking the red car.
 def numberOfCarsBlocking(state):
 	# Create an empty field
 	blockingCars = 0
@@ -109,16 +123,23 @@ def numberOfCarsBlocking(state):
 		carIndex += 1
 	return blockingCars
 
+
+# this function returns a deepcopy of the gives list
 def deepCopyList(list):
 	copiedList = []
 	copiedList = list[::]
 	return copiedList
 
+
+# this function checks if the given state is present in the archive
 def optionIsNotNew(option):
 	return STATES_ARCHIVE.checkState(option)
 
+
+# this function returns a boolean based on the given state. It returns
+# true if the state is a solution of the problem, i.e. if the path
+# of the red car to the exit is empty.
 def optionIsSolution(state):
-	#checkt nog te veel maar Alex zeurt
 	occupied = getOccupiedTiles(state)
 	arraycounter =[]
 	counter = 1
@@ -134,6 +155,9 @@ def optionIsSolution(state):
 			return False
 	return True
 
+
+# this function takes a state and returns a list with tiles, which are
+# occupied by cars.
 def getOccupiedTiles(state):
 	occupied = []
 	k = 0
@@ -158,6 +182,9 @@ def getOccupiedTiles(state):
 		k += 1
 	return occupied
 
+
+# this functions returns a list of states which are possible to make by
+# moving a car one space on the gives state.
 def allMoves(state):
 	moveOptions = []
 	i = 0
@@ -201,11 +228,16 @@ def allMoves(state):
 
 	return moveOptions
 
+
+# this function takes a list and converts it to a tuple. Later in the project,
+# we found out that this is easily done in python by: tuple(list)...
 def listToTuple(inputList):
 	newTuple = ()
 	for item in inputList:
 		newTuple += (item,)
 	return newTuple
 
+
+# this make the program run when this file is opened from the command prompt
 if __name__ == '__main__':
 	main()

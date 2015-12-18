@@ -4,52 +4,66 @@ from allBords import *
 import copy
 import Queue
 from rushhour_visualisation import *
-# this contains the state and it's parent state like:
-# [state, parentState]
+
+# Initialize global variables
 STATES_ARCHIVE = []
-# this contains the solution state and it's parent state like:
-# [state, parentState]
 SOLUTION = []
-# This contains the path to the solution backwards.
 SOLUTION_PATH = []
 INITIAL_STATE = []
 WIDTH = 0
 EXIT = 0
 CARS_LIST = CarsList()
 
-
+# main is the main function, which sets the global variables, runs the algorithm,
+# prints the outcome of the algorithm and runs the simulation
 def main():
-	bordVariables = bord(1) #  [carsList,width,exit]
+
+	# choose the bord to perform the algoritmh on (1-7)
+	bordVariables = bord(1)
+
+	# set global variables
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = dict()
 
+	# run the Breadth First Search algorithm
 	algorithm(INITIAL_STATE)
-	#Print some results
 
+	# print the results of the algorithm
 	print "Algorithm is done"
 	print len(SOLUTION_PATH)
 
+	# run the simulation of the shortest path
 	runSimulation(CARS_LIST.getVisualisationList(), SOLUTION_PATH, WIDTH, WIDTH, 0.5)
 
+
+# the algorithm function runs the Breadth First Search algorithm. It takes a input
+# the initial state.
 def algorithm(initialState):
+
 	queue = []
 	queue.append(initialState)
 	statesCount = 0
 	# add first state
 	STATES_ARCHIVE[tuple(initialState)] = [initialState, initialState]
+
 	# loop all possible moves
 	solutionNotFound = True
 	while (not (queue == []) and solutionNotFound) :
+
+		# take the next state from the queue
 		option = queue.pop(0)
 
-		# Loop all options and (conditionaly) store them on the stack to revisit later
+		# make a list of all possible states (from the dequeued state) and
+		# loop through them
 		for newOption in allMoves(option):
-			# Stop the loop if option is a repeat or the solution
+
+			# check if the state is already in the archive
 			if optionIsNotNew(newOption):
 				continue
+			# check if the state is a solution, then add it to the solutions
 			elif optionIsSolution(newOption):
 				print statesCount
 				SOLUTION.append(newOption)
@@ -57,18 +71,24 @@ def algorithm(initialState):
 				solutionNotFound = False
 
 				break
+			# push the state to the stack and add it to the archive
 			else:
 				# add the option to the queue for later evaluation
-				#print "lq:" , len(queue)
 				queue.append(newOption)
 				statesCount += 1
 				# add the option to the states archive
 				STATES_ARCHIVE[tuple(newOption)] = [newOption, option]
+
+	# get the path from start to solution
 	getSolutionPath()
 
+
+# this function returns a deepcopy of the gives list
 def deepCopyList(List):
 	return list(List)
 
+
+# this function returns the path from start to solution as a list of states
 def getSolutionPath():
 	path = [SOLUTION[0]]
 	parent = SOLUTION[1]
@@ -89,10 +109,15 @@ def getSolutionPath():
 	# store the path (but the path needs to be flipped)
 	global SOLUTION_PATH; SOLUTION_PATH = path[::-1]
 
+
+# this function checks if the given state is present in the archive
 def optionIsNotNew(option):
-	# check tree for state
 	return tuple(option) in STATES_ARCHIVE
 
+
+# this function returns a boolean based on the given state. It returns
+# true if the state is a solution of the problem, i.e. if the path
+# of the red car to the exit is empty.
 def optionIsSolution(state):
 	carIndex = 0
 	tilesToExit = range(state[-1] + 2, EXIT + 2)
@@ -105,6 +130,9 @@ def optionIsSolution(state):
 		carIndex += 1
 	return True
 
+
+# this function takes a state and returns a list with tiles, which are
+# occupied by cars.
 def getOccupiedTiles(state):
 	occupied = []
 	k = 0
@@ -129,6 +157,9 @@ def getOccupiedTiles(state):
 		k += 1
 	return occupied
 
+
+# this functions returns a list of states which are possible to make by
+# moving a car one space on the gives state.
 def allMoves(state):
 	moveOptions = []
 	i = 0
@@ -173,5 +204,7 @@ def allMoves(state):
 
 	return moveOptions
 
+
+# this make the program run when this file is opened from the command prompt
 if __name__ == '__main__':
 	main()
