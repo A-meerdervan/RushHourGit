@@ -4,6 +4,9 @@ import random
 
 from Tkinter import *
 
+# The RushhourVisualisation class is a modified version of a visualization made by
+# the CS50 team.
+
 class RushhourVisualisation:
     def __init__(self, width, height, visualization, delay = 1):
         "Initializes a visualization with the specified parameters."
@@ -13,7 +16,6 @@ class RushhourVisualisation:
         self.width = width
         self.height = height
         self.visualizationData = visualization
-
         self.carsImage = None
 
         # Initialize a drawing surface
@@ -71,13 +73,12 @@ class RushhourVisualisation:
             for cars in self.carsImage:
                 self.w.delete(cars)
                 self.master.update_idletasks()
-        # Draw new cars
+
         self.carsImage = []
         for cars in range(0,len(state)):
             self.carsImage.append(self._draw_car(state[cars]%self.width, state[cars]/self.width,
             self.visualizationData[cars][1], self.visualizationData[cars][2], self.visualizationData[cars][3]))
 
-        # Update text
         self.w.delete(self.text)
         self.time += 1
         self.text = self.w.create_text(

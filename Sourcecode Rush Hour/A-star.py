@@ -1,4 +1,3 @@
-
 from archive import StatesArchive
 from CarsList import CarsList
 from Car import Car
@@ -22,27 +21,24 @@ CARS_LIST = CarsList()
 INITIAL_STATE = []
 
 
-
 def main():
 	bordVariables = bord(1) # return [carsList,width,exit]
 	global WIDTH; WIDTH = bordVariables[1]
 	global EXIT; EXIT = bordVariables[2]
 	global CARS_LIST; CARS_LIST = bordVariables[0]
 	global CARS_LIST_LENGHT; CARS_LIST_LENGHT = len(CARS_LIST.cars)
-	# TEST dept first algorithme:
 	global INITIAL_STATE; INITIAL_STATE = CARS_LIST.getFirstState()
 	global STATES_ARCHIVE; STATES_ARCHIVE = StatesArchive()
 
+	# Run the main algorithm
 	algorithm(INITIAL_STATE)
 
 	print "Algorithm is done"
 	shortestPath = SOLUTION_PATHS[-1]
-
-
 	runSimulation(CARS_LIST.getVisualisationList(), shortestPath, WIDTH, WIDTH, 0.5) # slordig dubble WIDTH meegeven
 
 def algorithm(initialState):
-	priorityQueue = Queue.PriorityQueue() # choose for Stack or PriorityStack
+	priorityQueue = Queue.PriorityQueue()
 	# add first state
 	priorityQueue.put((1, initialState))
 	STATES_ARCHIVE.setInitialState(initialState)
@@ -67,26 +63,14 @@ def algorithm(initialState):
 			newOption = allOptions[optionIndex]
 			# Stop the loop if option is a repeat or the solution
 			if optionIsNotNew(newOption):
-				# decrease child count with one
-				# replace the if and else statements by a single continue to disable
-				# the search for the best option
-				#if STATES_ARCHIVE.getStateDepth(newOption) > (STATES_ARCHIVE.getStateDepth(option) + 1):
-				#	STATES_ARCHIVE.setState(newOption, (STATES_ARCHIVE.getStateDepth(option))+1, option)
-				#	stack.push(newOption)
-				#else:
 				continue
 			elif optionIsSolution(newOption):
 				print statesCount
 				print statesGen
 				# decrease child count with one
 				SOLUTION_PATHS.append(STATES_ARCHIVE.getSolutionPath(newOption, option))
-				#print "max dept wanneer oplossing is gevonden", MaxDepth
-				#print "length path", len(PATH_TRACKER.path)
 				# When a shorter solution is found the max depth of the search is set to that length
 				MaxDepth = STATES_ARCHIVE.getStateDepth(option) - 1
-				# This will break the for loop so that solutions with equal length
-				# are not evaluated
-				# break
 				return
 			else:
 				# add the option to the stack for later evaluation
@@ -98,7 +82,6 @@ def algorithm(initialState):
 					print "st gen:	", statesGen
 				statesCount += 1
 		# If this node has no children go up as many levels as needed
-	#getSolutionPaths()
 
 def getPriority(newOption, option):
 	priority = 0
@@ -128,13 +111,10 @@ def numberOfCarsBlocking(state):
 
 def deepCopyList(list):
 	copiedList = []
-	# for item in list:
-	# 	copiedList.append(item)
 	copiedList = list[::]
 	return copiedList
 
 def optionIsNotNew(option):
-	# check tree for state
 	return STATES_ARCHIVE.checkState(option)
 
 def optionIsSolution(state):
