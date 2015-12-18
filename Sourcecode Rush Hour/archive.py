@@ -1,3 +1,6 @@
+# the StatesArchive class stores all the visited states. It contains functions
+# to add states to the archive, check if certain states are in it, and to
+# get the path from the beginstate to the solution as a list of states.
 class StatesArchive(object):
     def __init__(self):
         self.states = {}

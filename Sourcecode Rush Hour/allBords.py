@@ -1,6 +1,9 @@
 from Car import Car
 from CarsList import CarsList
 carsList = CarsList()
+
+# This function returns all the specifications of a start board and car
+# configurations. 
 def bord(level):
     if level == 1:
         width = 6
